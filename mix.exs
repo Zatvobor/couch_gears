@@ -13,8 +13,7 @@ defmodule CouchGears.Mixfile do
   end
 
   # Returns the list of dependencies in the format:
-  # { :foobar, "0.1", git: "https://github.com/elixir-lang/foobar.git" }
   defp deps do
-    [ { :dynamo, "0.1.0.dev", github: "josevalim/dynamo" } ]
+    [{:dynamo, "0.1.0.dev", github: "josevalim/dynamo"}]
   end
 end
