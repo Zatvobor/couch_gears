@@ -1,3 +1,4 @@
 /ebin
 /deps
+/hello_gear
 erl_crash.dump

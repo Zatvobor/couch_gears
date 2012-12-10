@@ -23,18 +23,16 @@ defmodule CouchGears do
     @doc false
     defp start_otp_applications do
       :application.start(:elixir)
-      Dynamo.start(:test)
       :application.start(:couch_gears)
-
       load_couch_gear_application
+
       {:ok, self()}
     end
 
     @doc false
     defp load_couch_gear_application do
-      # Code.require_file("/opt/datahogs/hello_gear/lib/couch_gear_application.ex")
-      Code.append_path("/Volumes/branch320/opt/datahogs/hello_gear/ebin")
-      # CouchGearApplication.start
+      Code.append_path("/Volumes/branch320/opt/datahogs/couch_gears/hello_gear/tmp/ebin")
+      CouchGearApplication.start
     end
 
   end
