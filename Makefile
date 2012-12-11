@@ -4,9 +4,7 @@ setup: get-deps compile
 
 
 get-deps:
-	@ mkdir deps && cd deps && git clone git://github.com/elixir-lang/elixir.git
-	@ cd deps/elixir && git checkout v0.7.1 && make compile
-	@ cd deps && git clone -b 1.2.x git://github.com/apache/couchdb.git
+	@ mkdir deps && cd deps && git clone -b 1.2.x git://github.com/apache/couchdb.git
 
 compile: clean couch_gears test
 
