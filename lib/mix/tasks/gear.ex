@@ -5,44 +5,37 @@ defmodule Mix.Tasks.Gear do
   import Mix.Utils, only: [camelize: 1, underscore: 1]
 
   @version CouchGears.Mixfile.project[:version]
-  @shortdoc "Create a new CouchGears project"
+  @shortdoc "Create a new CouchGears' application"
 
 
   @moduledoc """
-      mix gear hello_gear
+      mix gear - generates hello application
+      mix gear application_name - generates specified application
   """
   def run(argv) do
-    { opts, argv } = OptionParser.parse(argv, flags: [:dev])
-    case argv do
-      [] ->
-        raise Mix.Error, message: "expected PATH to be given, please use `mix gears PATH`"
-      [path] ->
-        File.mkdir_p!(path)
-        File.cd!(path, fn -> do_generate(opts) end)
+    name = case argv do
+      [] -> "hello_world"
+      [name] -> name
     end
+
+    path = File.join("apps", name)
+    File.mkdir_p!(path)
+    File.cd!(path, fn -> do_generate(name) end)
   end
 
 
-  defp do_generate(opts) do
-
-    couch_gears_source = if opts[:dev] do
-      %b(raw: "#{File.expand_path("../../../..", __FILE__)}")
-    else
-      %b(github: "datahogs/couch_gears")
-    end
-
-    assigns = [version: @version, couch_gears_source: couch_gears_source]
+  defp do_generate(name) do
+    assigns = [version: @version, couch_gears_source: %b(path: "../../../couch_gears"), name: name]
 
     create_file ".gitignore", gitignore_text
-    create_file "Makefile",   makefile_text
     create_file "mix.exs",    mixfile_template(assigns)
+    create_file "mix.lock",   mixlock_text
 
     create_directory "app"
+    create_file "app/" <> name <>"_application.ex", lib_app_template(assigns)
     create_directory "app/routers"
     create_file "app/routers/application_router.ex", app_router_text
 
-    create_directory "lib"
-    create_file "lib/couch_gear_application.ex", lib_app_text
     create_directory "lib/mix/tasks"
     create_file "lib/mix/tasks/app.start", app_start_text
   end
@@ -54,32 +47,34 @@ defmodule Mix.Tasks.Gear do
   erl_crash.dump
   """
 
-  embed_text :makefile, from_file("../../../../Makefile")
-
   embed_template :mixfile, """
-  defmodule CouchGearApplication.Mixfile do
+  defmodule <%= Mix.Utils.camelize(@name) %>Application.Mixfile do
     use Mix.Project
 
     def project do
       [ app: :couch_gear_application,
-        version: "0.0.1.dev",
+        version: "0.1.0.dev",
         compile_path: "tmp/ebin",
-        dynamos: [CouchGearApplication],
+        dynamos: [<%= Mix.Utils.camelize(@name) %>Application],
         compilers: [:elixir, :dynamo, :couch_gears, :app],
+        source_paths: ["lib", "app"],
         env: [prod: [compile_path: "ebin"]],
+        deps_path: "../../../couch_gears/deps",
         deps: deps ]
     end
 
     # Configuration for the OTP application
     def application do
-      [ applications: [:dynamo] ]
+      []
     end
 
     defp deps do
-      [ {:couch_gears, "<%= @version %>", <%= @couch_gears_source %>} ]
+      [{:couch_gears, "<%= @version %>", <%= @couch_gears_source %>}]
     end
   end
   """
+
+  embed_text :mixlock, from_file("../../../../mix.lock")
 
   embed_text :app_router, """
   defmodule ApplicationRouter do
@@ -91,8 +86,8 @@ defmodule Mix.Tasks.Gear do
   end
   """
 
-  embed_text :lib_app, """
-  defmodule CouchGearApplication do
+  embed_template :lib_app, """
+  defmodule <%= Mix.Utils.camelize(@name) %>Application do
     use CouchGears
 
     endpoint ApplicationRouter
