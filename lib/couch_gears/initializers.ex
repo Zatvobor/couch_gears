@@ -11,6 +11,7 @@ defmodule CouchGears.Initializers do
 
     # Then Elixir's stuff are available
     Code.append_path(root_path <> "/deps/elixir/lib/mix/ebin")
+    Code.append_path(root_path <> "/deps/elixir/lib/iex/ebin")
     Code.append_path(root_path <> "/deps/dynamo/ebin")
     Code.append_path(root_path <> "/deps/mimetypes/ebin")
 
@@ -27,6 +28,7 @@ defmodule CouchGears.Initializers do
   @doc false
   defp start_gears_dependencies do
     :application.start(:elixir)
+    :application.start(:mix)
     :application.start(:mimetypes)
     :application.start(:dynamo)
   end
@@ -41,10 +43,8 @@ defmodule CouchGears.Initializers do
   @doc false
   defp initialize_gears(root_path) do
     apps = Enum.map File.wildcard(root_path <> "/apps/*"), fn(app_path) ->
-      # should check compile_on_demand and current environment...
-      # for dev|test env should re(load|compile) whole application by request
-      # for prod env load/compile whole application
-      Code.append_path(app_path <> "/tmp/ebin")
+      File.cd(app_path)
+      Code.load_file File.join([app_path, "config", "application.ex"])
 
       app_name = Mix.Utils.camelize List.last(File.split(app_path))
       app = Module.concat([app_name <> "Application"])

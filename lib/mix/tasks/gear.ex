@@ -31,8 +31,9 @@ defmodule Mix.Tasks.Gear do
     create_file "mix.exs",    mixfile_template(assigns)
     create_file "mix.lock",   mixlock_text
 
-    create_directory "app"
-    create_file "app/" <> name <>"_application.ex", lib_app_template(assigns)
+    create_directory "config"
+    create_file "config/application.ex", app_template(assigns)
+
     create_directory "app/routers"
     create_file "app/routers/application_router.ex", app_router_text
 
@@ -57,7 +58,7 @@ defmodule Mix.Tasks.Gear do
         compile_path: "tmp/ebin",
         dynamos: [<%= Mix.Utils.camelize(@name) %>Application],
         compilers: [:elixir, :dynamo, :couch_gears, :app],
-        source_paths: ["lib", "app"],
+        source_paths: ["lib", "app", "config"],
         env: [prod: [compile_path: "ebin"]],
         deps_path: "../../../couch_gears/deps",
         deps: deps ]
@@ -86,7 +87,7 @@ defmodule Mix.Tasks.Gear do
   end
   """
 
-  embed_template :lib_app, """
+  embed_template :app, """
   defmodule <%= Mix.Utils.camelize(@name) %>Application do
     use CouchGears
 
@@ -97,9 +98,14 @@ defmodule Mix.Tasks.Gear do
 
     config :dynamo,
     # Compiles modules as they are needed
-    compile_on_demand: false,
+    compile_on_demand: true,
+
+    # Reload modules after they are changed
+    reload_modules: true,
+
     # The environment this Dynamo runs on
     env: Mix.env,
+
     # The endpoint to dispatch requests too
     endpoint: ApplicationRouter
 
