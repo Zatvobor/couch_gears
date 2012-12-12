@@ -21,9 +21,6 @@ defmodule CouchGears.Mochiweb.HTTP do
     )
   end
 
-  # def new(app) do
-  #   connection(app: app)
-  # end
 
   # Connection helpers
 
@@ -34,21 +31,14 @@ defmodule CouchGears.Mochiweb.HTTP do
 
   def original_method(httpd), do: atom_to_binary(httpd.method, :utf8)
 
-  # def query_string(httpd) do
-  #   raw_path = h.mochi_req.get(:raw_path)
-  #   {_, query_string, _} = :mochiweb_util.urlsplit_path(raw_path)
-  #   query_string
-  # end
-
 
   # Should be checked and removed/redefined
 
-  def query_string(_a), do: raise "unexpected behaviour"
-
-  def path_segments(_a), do: raise "unexpected behaviour"
-  def path(_a), do: raise "unexpected behaviour"
-  def version(_a), do: raise "unexpected behaviour"
-  def req_cookies(_a), do: raise "unexpected behaviour"
+  def query_string(_a), do: panic!
+  def path_segments(_a), do: panic!
+  def path(_a), do: panic!
+  def version(_a), do: panic!
+  def req_cookies(_a), do: panic!
 
 
   # Response haldlers
@@ -58,8 +48,14 @@ defmodule CouchGears.Mochiweb.HTTP do
     httpd.mochi_req.respond({code, CouchGears.Mochiweb.Utils.get_resp_headers(headers, cookies), body})
   end
 
-  def fetch(_a,_b), do: raise "unexpected behaviour"
-  def sendfile(_a,_b), do: raise "unexpected behaviour"
-  def chunk(_a,_b), do: raise "unexpected behaviour"
-  def send_chunked(_a,_b), do: raise "unexpected behaviour"
+  def fetch(_a,_b), do: panic!
+  def sendfile(_a,_b), do: panic!
+  def chunk(_a,_b), do: panic!
+  def send_chunked(_a,_b), do: panic!
+
+
+  defp panic! do
+    raise "Something wrong with it. Submit the github/issue, please"
+  end
+
 end
