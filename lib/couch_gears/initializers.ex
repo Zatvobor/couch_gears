@@ -48,7 +48,7 @@ defmodule CouchGears.Initializers do
 
       app_name = Mix.Utils.camelize List.last(File.split(app_path))
       app = Module.concat([app_name <> "Application"])
-      app.start
+      app.start_link
       app
     end
 

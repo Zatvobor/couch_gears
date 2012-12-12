@@ -90,21 +90,18 @@ defmodule Mix.Tasks.Gear do
   defmodule <%= Mix.Utils.camelize(@name) %>Application do
     use CouchGears
 
-    # Application settings
     config :gear,
-    # Application specific/aware db(s)
-    # ["db_name"] available only for /db_name requests
-    # :all enabled for various db(s)
+    # The dbs that enabled for application
     known_db: :all
+
 
     config :dynamo,
     # Compiles modules as they are needed
     compile_on_demand: false,
     # The environment this Dynamo runs on
-    env: Mix.env
-
-
-    endpoint ApplicationRouter
+    env: Mix.env,
+    # The endpoint to dispatch requests too
+    endpoint: ApplicationRouter
 
   end
   """

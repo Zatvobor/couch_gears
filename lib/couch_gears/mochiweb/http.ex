@@ -60,4 +60,6 @@ defmodule CouchGears.Mochiweb.HTTP do
 
   def fetch(_a,_b), do: raise "unexpected behaviour"
   def sendfile(_a,_b), do: raise "unexpected behaviour"
+  def chunk(_a,_b), do: raise "unexpected behaviour"
+  def send_chunked(_a,_b), do: raise "unexpected behaviour"
 end
