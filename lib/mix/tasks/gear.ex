@@ -91,11 +91,11 @@ defmodule Mix.Tasks.Gear do
     use CouchGears
 
     # Application settings
-    config :gears,
-    # Application specific db(s)
-    # [:db_name] available only for /db_name requests
-    # :all handle each requests for various Dbs
-    db: :all
+    config :gear,
+    # Application specific/aware db(s)
+    # ["db_name"] available only for /db_name requests
+    # :all enabled for various db(s)
+    known_db: :all
 
     config :dynamo,
     # Compiles modules as they are needed

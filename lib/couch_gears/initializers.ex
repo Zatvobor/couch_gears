@@ -40,7 +40,7 @@ defmodule CouchGears.Initializers do
 
   @doc false
   defp initialize_gears(root_path) do
-    Enum.each File.wildcard(root_path <> "/apps/*"), fn(app_path) ->
+    apps = Enum.map File.wildcard(root_path <> "/apps/*"), fn(app_path) ->
       # should check compile_on_demand and current environment...
       # for dev|test env should re(load|compile) whole application by request
       # for prod env load/compile whole application
@@ -49,7 +49,10 @@ defmodule CouchGears.Initializers do
       app_name = Mix.Utils.camelize List.last(File.split(app_path))
       app = Module.concat([app_name <> "Application"])
       app.start
+      app
     end
+
+    :application.set_env(:couch_gears, :gears, apps)
   end
 
 end
