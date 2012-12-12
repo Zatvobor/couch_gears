@@ -52,7 +52,7 @@ defmodule Mix.Tasks.Gear do
     use Mix.Project
 
     def project do
-      [ app: :couch_gear_application,
+      [ app: :<%= @name %>_application,
         version: "0.1.0.dev",
         compile_path: "tmp/ebin",
         dynamos: [<%= Mix.Utils.camelize(@name) %>Application],
