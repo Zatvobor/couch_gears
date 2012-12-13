@@ -1,13 +1,17 @@
-defmodule CouchGears.Initializers do
+defmodule CouchGears.Initializer do
 
   @doc """
   COUCH_GEARS_PA_OPTIONS="-pa /Volumes/branch320/opt/datahogs/couch_gears/ebin"
   [daemons]
-  couch_gears={'Elixir-CouchGears-Initializers', start_link, [<<"/Volumes/branch320/opt/datahogs/couch_gears">>]}
+  couch_gears={'Elixir-CouchGears-Initializer', start_link, [[{env, <<"prod">>},{root_path, <<"/Volumes/branch320/opt/datahogs/couch_gears">>}]]}
   """
-  def start_link(root_path) do
+  def start_link(opts) do
+    # Assert start up options
+    {_, root_path} = configure_gears(opts)
+
     # Firstly set up load paths for Elixir
     :erlang.bitstring_to_list(root_path <> "/deps/elixir/lib/elixir/ebin") /> :code.add_pathz
+
 
     # Then Elixir's stuff are available
     Code.append_path(root_path <> "/deps/elixir/lib/mix/ebin")
@@ -18,14 +22,14 @@ defmodule CouchGears.Initializers do
     # Set up gears environment
     start_gears_dependencies
     configure_httpd_handlers
-    initialize_gears(root_path)
+    initialize_gears
 
     # Notify couch's supervisor about success
     {:ok, self()}
   end
 
 
-  @doc false
+
   defp start_gears_dependencies do
     :application.start(:elixir)
     :application.start(:mix)
@@ -33,16 +37,14 @@ defmodule CouchGears.Initializers do
     :application.start(:dynamo)
   end
 
-  @doc false
   defp configure_httpd_handlers do
     # [httpd_db_handlers]
     # _gears = {'Elixir-CouchGears-Httpd-DbHandlers', handle_db_gears_req}
     :couch_config.set("httpd_db_handlers", "_gears", "{'Elixir-CouchGears-Httpd-DbHandlers', handle_db_gears_req}", false)
   end
 
-  @doc false
-  defp initialize_gears(root_path) do
-    apps = Enum.map File.wildcard(root_path <> "/apps/*"), fn(app_path) ->
+  defp initialize_gears do
+    apps = Enum.map File.wildcard(CouchGears.root_path <> "/apps/*"), fn(app_path) ->
       File.cd(app_path)
       Code.load_file File.join([app_path, "config", "application.ex"])
 
@@ -53,6 +55,18 @@ defmodule CouchGears.Initializers do
     end
 
     :application.set_env(:couch_gears, :gears, apps)
+  end
+
+  defp configure_gears(opts) do
+    env = :couch_util.get_value(:env, opts, "dev")
+    CouchGears.env(env)
+
+    root_path = :couch_util.get_value(:root_path, opts)
+    CouchGears.root_path(root_path)
+
+    if root_path == :undefined, do: raise "undefined root_path"
+
+    {env, root_path}
   end
 
 end
