@@ -4,7 +4,7 @@ defmodule CouchGears do
   defmacro __using__(_) do
     quote location: :keep do
       use Dynamo
-      import CouchGears
+      import unquote(__MODULE__)
     end
   end
 

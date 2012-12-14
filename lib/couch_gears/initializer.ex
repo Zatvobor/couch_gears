@@ -45,11 +45,16 @@ defmodule CouchGears.Initializer do
 
   defp initialize_gears do
     apps = Enum.map File.wildcard(CouchGears.root_path <> "/apps/*"), fn(app_path) ->
+      app_name = List.last(File.split(app_path))
+
+      # Starts OTP application
+      Code.append_path File.join([app_path, "ebin"])
+      :application.start binary_to_atom(app_name)
+
+      # Starts dynamos application
       File.cd(app_path)
       Code.load_file File.join([app_path, "config", "application.ex"])
-
-      app_name = Mix.Utils.camelize List.last(File.split(app_path))
-      app = Module.concat([app_name <> "Application"])
+      app = Module.concat([Mix.Utils.camelize(app_name) <> "Application"])
       app.start_link
       app
     end

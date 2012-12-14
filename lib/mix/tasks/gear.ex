@@ -36,9 +36,6 @@ defmodule Mix.Tasks.Gear do
 
     create_directory "app/routers"
     create_file "app/routers/application_router.ex", app_router_text
-
-    create_directory "lib/mix/tasks"
-    create_file "lib/mix/tasks/app.start", app_start_text
   end
 
 
@@ -53,20 +50,11 @@ defmodule Mix.Tasks.Gear do
     use Mix.Project
 
     def project do
-      [ app: :<%= @name %>_application,
+      [ app: :<%= @name %>,
         version: "0.1.0.dev",
-        compile_path: "tmp/ebin",
-        dynamos: [<%= Mix.Utils.camelize(@name) %>Application],
-        compilers: [:elixir, :dynamo, :couch_gears, :app],
-        source_paths: ["lib", "app", "config"],
-        env: [prod: [compile_path: "ebin"]],
+        compilers: [:elixir, :app],
         deps_path: "../../../couch_gears/deps",
         deps: deps ]
-    end
-
-    # Configuration for the OTP application
-    def application do
-      []
     end
 
     defp deps do
@@ -117,20 +105,6 @@ defmodule Mix.Tasks.Gear do
     environment %r(prod|test) do
       config :dynamo, compile_on_demand: true, reload_modules: false
     end
-  end
-  """
-
-  embed_text :app_start, """
-  defmodule Mix.Tasks.App.Start do
-    use Mix.Task
-
-    @hidden true
-    @shortdoc "Run all Dynamos in a web server"
-
-    def run(_) do
-      IO.puts "Application has been started (fake)"
-    end
-
   end
   """
 end
