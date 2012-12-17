@@ -17,6 +17,9 @@ defmodule CouchGears.Mochiweb.HTTP do
       db_name: db_name,
       path_info_segments: path_info_segments(httpd),
       method: original_method(httpd),
+      params: query_string(httpd),
+      req_headers: req_headers(httpd),
+      cookies: cookies(httpd),
       before_send: Dynamo.HTTP.default_before_send
     )
   end
@@ -25,16 +28,30 @@ defmodule CouchGears.Mochiweb.HTTP do
   # Connection helpers
 
   def path_info_segments(httpd) do
+    # cuts 'db_name' and '_gears' parts
     [_a,_b | path_parts] = httpd.path_parts
     path_parts
   end
 
-  def original_method(httpd), do: atom_to_binary(httpd.method, :utf8)
+  def original_method(httpd) do
+    atom_to_binary(httpd.method, :utf8)
+  end
+
+  def query_string(httpd) do
+    Enum.map httpd.mochi_req.parse_qs, fn({k, v}) -> {list_to_atom(k), list_to_binary(v)} end
+  end
+
+  def req_headers(httpd) do
+    httpd.mochi_req.get(:headers)
+  end
+
+  def cookies(httpd) do
+    Enum.map httpd.mochi_req.parse_cookie, fn({k, v}) -> {list_to_atom(k), list_to_binary(v)} end
+  end
 
 
   # Should be checked and removed/redefined
 
-  def query_string(_a), do: panic!
   def path_segments(_a), do: panic!
   def path(_a), do: panic!
   def version(_a), do: panic!
