@@ -42,7 +42,8 @@ defmodule CouchGears.Mochiweb.HTTP do
   end
 
   def req_headers(httpd) do
-    httpd.mochi_req.get(:headers)
+    headers = :mochiweb_headers.to_list(httpd.mochi_req.get(:headers))
+    Enum.map headers, fn({k, v}) -> {k, list_to_binary(v)} end
   end
 
   def cookies(httpd) do
@@ -58,7 +59,11 @@ defmodule CouchGears.Mochiweb.HTTP do
   def req_cookies(_a), do: panic!
 
 
-  # Response haldlers
+  # Response handlers
+
+  def resp_body(props, :json, conn) when is_list(props) do
+    conn.resp_body(:ejson.encode({props}))
+  end
 
   def send(code, body, connection) do
     connection(httpd: httpd, resp_headers: headers, resp_cookies: cookies) = connection

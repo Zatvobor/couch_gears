@@ -69,8 +69,20 @@ defmodule Mix.Tasks.Gear do
   defmodule ApplicationRouter do
     use CouchGears.Router
 
+    # Application level filters
+
+    # Sets CouchGears backend version info as a 'Server' response header
+    # filter CouchGears.Filters.ServerVersion
+
+    # Sets 'application/json' by default
+    filter CouchGears.Filters.ResponseTypeJSON
+
+    # Accepts only 'application/json' requests. Otherwise, returns a 'Bad Request' response
+    # filter CouchGears.Filters.OnlyRequestTypeJSON
+
+
     get "/" do
-      conn.resp_body("Yo")
+      conn.resp_body([{:ok, "Hello World"}], :json)
     end
   end
   """
