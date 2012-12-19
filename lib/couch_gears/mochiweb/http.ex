@@ -25,6 +25,21 @@ defmodule CouchGears.Mochiweb.HTTP do
   end
 
 
+  # Record ancestors
+
+  def httpd(connection(httpd: httpd)), do: httpd
+
+  def req_headers(key, connection(req_headers: req_headers)) do
+    :proplists.get_value(key, req_headers)
+  end
+
+  def resp_headers(key, connection(resp_headers: resp_headers)) do
+    {_,resp_headers} = resp_headers
+    :proplists.get_value(key, resp_headers)
+  end
+
+
+
   # Connection helpers
 
   def path_info_segments(httpd) do
@@ -43,7 +58,7 @@ defmodule CouchGears.Mochiweb.HTTP do
 
   def req_headers(httpd) do
     headers = :mochiweb_headers.to_list(httpd.mochi_req.get(:headers))
-    Enum.map headers, fn({k, v}) -> {k, list_to_binary(v)} end
+    Enum.map headers, fn({k, v}) -> {to_binary(k), to_binary(v)} end
   end
 
   def cookies(httpd) do

@@ -36,6 +36,10 @@ defmodule Mix.Tasks.Gear do
 
     create_directory "app/routers"
     create_file "app/routers/application_router.ex", app_router_text
+
+    create_directory "test/" <> name
+    create_file "test/test_helper.exs", test_helper_text
+    create_file "test/" <> name <> "/application_router_test.exs", application_router_test_text
   end
 
 
@@ -64,6 +68,7 @@ defmodule Mix.Tasks.Gear do
   """
 
   embed_text :mixlock, from_file("../../../../mix.lock")
+  embed_text :test_helper, from_file("../../../../test/test_helper.exs")
 
   embed_text :app_router, """
   defmodule ApplicationRouter do
@@ -117,6 +122,32 @@ defmodule Mix.Tasks.Gear do
     environment %r(prod|test) do
       config :dynamo, compile_on_demand: true, reload_modules: false
     end
+  end
+  """
+
+  embed_text :application_router_test, """
+  Code.require_file "../../test_helper.exs", __FILE__
+
+  defmodule ApplicationRouterTest do
+    use ExUnit.Case, async: true
+    use CouchGears.Case
+
+    Code.require_file "app/routers/application_router.ex"
+    @app ApplicationRouter
+
+
+    test "returns not_found" do
+      assert get(path: "u/n/k/n/o/w/n").status == 404
+    end
+
+    test "returns body as json" do
+      conn = get(path: "/", headers: [{"Content-Type", "application/json"}])
+
+      assert conn.status == 200
+      assert conn.resp_headers("Content-Type") == "application/json"
+      assert conn.resp_body == "{\\"ok\\":\\"Hello World\\"}"
+    end
+
   end
   """
 end
