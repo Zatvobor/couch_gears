@@ -40,6 +40,15 @@ defmodule CouchGears do
   @doc false
   def root_path(value), do: :application.set_env(:couch_gears, :root_path, value)
 
+  @doc false
+  def gears do
+    {:ok, apps} = :application.get_env(:couch_gears, :gears)
+    apps
+  end
+
+  @doc false
+  def gears(apps), do: :application.set_env(:couch_gears, :gears, apps)
+
 
   @doc false
   def version, do: "0.1.0.dev"

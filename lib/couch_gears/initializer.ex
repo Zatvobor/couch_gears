@@ -1,30 +1,31 @@
 defmodule CouchGears.Initializer do
 
+  @root_path File.expand_path "../../..", __FILE__
+
   @doc """
   COUCH_GEARS_PA_OPTIONS="-pa /Volumes/branch320/opt/datahogs/couch_gears/ebin"
   [daemons]
-  couch_gears={'Elixir-CouchGears-Initializer', start_link, [[{env, <<"prod">>},{root_path, <<"/Volumes/branch320/opt/datahogs/couch_gears">>}]]}
+  couch_gears={'Elixir-CouchGears-Initializer', start_link, [[{env, <<"prod">>}]]}
   """
   def start_link(opts) do
-    # Assert start up options
-    {_, root_path} = configure_gears(opts)
+    # Asserts start up options
+    configure_gears(opts)
 
-    # Firstly set up load paths for Elixir
-    :erlang.bitstring_to_list(root_path <> "/deps/elixir/lib/elixir/ebin") /> :code.add_pathz
+    # Firstly set up a load path for Elixir
+    :erlang.bitstring_to_list(@root_path <> "/deps/elixir/lib/elixir/ebin") /> :code.add_pathz
 
-
-    # Then Elixir's stuff are available
-    Code.append_path(root_path <> "/deps/elixir/lib/mix/ebin")
-    Code.append_path(root_path <> "/deps/elixir/lib/iex/ebin")
-    Code.append_path(root_path <> "/deps/dynamo/ebin")
-    Code.append_path(root_path <> "/deps/mimetypes/ebin")
+    # Appends all dependencies
+    Code.append_path(@root_path <> "/deps/elixir/lib/mix/ebin")
+    Code.append_path(@root_path <> "/deps/elixir/lib/iex/ebin")
+    Code.append_path(@root_path <> "/deps/dynamo/ebin")
+    Code.append_path(@root_path <> "/deps/mimetypes/ebin")
 
     # Set up gears environment
     start_gears_dependencies
     configure_httpd_handlers
     initialize_gears
 
-    # Notify couch's supervisor about success
+    # Notifies couch's supervisor about success
     {:ok, self()}
   end
 
@@ -59,19 +60,12 @@ defmodule CouchGears.Initializer do
       app
     end
 
-    :application.set_env(:couch_gears, :gears, apps)
+    # Registers loaded applications
+    CouchGears.gears(apps)
   end
 
   defp configure_gears(opts) do
-    env = :couch_util.get_value(:env, opts, "dev")
-    CouchGears.env(env)
-
-    root_path = :couch_util.get_value(:root_path, opts)
-    CouchGears.root_path(root_path)
-
-    if root_path == :undefined, do: raise "undefined root_path"
-
-    {env, root_path}
+    CouchGears.env(:couch_util.get_value(:env, opts, "dev"))
+    CouchGears.root_path(@root_path)
   end
-
 end
