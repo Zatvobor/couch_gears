@@ -15,20 +15,28 @@ defmodule Mix.Tasks.Compile.Erlang do
   ## Configuration
 
   * `:erlangrc_options` - compilation options that applies
-     to Erlangs's compiler, they are: `[verbose,report_errors,report_warnings]`
+     to Erlangs' compiler, they are: `[:verbose,:report_errors,:report_warnings]`
      by default.
   """
   def run(_) do
-    compile_path = Mix.project[:compile_path] /> File.expand_path /> binary_to_list
+    erlangrc_options = Mix.project[:erlangrc_options] || []
 
-    erlangrc_options = Mix.project[:erlangrc_options] || [:verbose, :report_errors, :report_warnings]
+    # expands path for 'include' option
+    erlangrc_options = Enum.map erlangrc_options, fn(opt) ->
+      case opt do
+        {:i, dir} -> {:i, File.expand_path(dir) /> binary_to_list}
+        _         -> opt # as is
+      end
+    end
+
+    # puts 'outdir' option
+    compile_path = Mix.project[:compile_path] /> File.expand_path /> binary_to_list
     erlangrc_options = erlangrc_options ++ [{:outdir, compile_path}]
 
+    # compiles erlang's files
     files = Mix.Utils.extract_files(Mix.project[:source_paths], [:erl])
-
     Enum.each files, fn(file) ->
       file = String.replace(file, ".erl", "") /> File.expand_path /> binary_to_list
-
       case :compile.file(file, erlangrc_options) do
         {:ok, _} -> IO.puts "Compiled #{file}.erl"
         :error   -> IO.puts "== Compilation error on file #{file}.erl"

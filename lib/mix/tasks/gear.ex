@@ -53,6 +53,19 @@ defmodule Mix.Tasks.Gear do
   defmodule <%= Mix.Utils.camelize(@name) %>Application.Mixfile do
     use Mix.Project
 
+    @moduledoc \"""
+    ## Configuration for compilation erlang source files:
+
+    * `compilers: [:erlang]` - configured to compile erlang files,
+      for example: `compilers: [:elixir, :erlang, :app]`
+
+    * `source_paths: ["src"]` - directories to find '.erl' sources,
+      for example: `source_paths: ["src", "lib"]`
+
+    * `erlangrc_options:` - custom compilation options that applies to erlang compiler,
+      for example: `erlangrc_options: {:i, "../../../couch_gears/deps/couchdb/src/couchdb"}`
+
+    \"""
     def project do
       [ app: :<%= @name %>,
         version: "0.1.0.dev",
