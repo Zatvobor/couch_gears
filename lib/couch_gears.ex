@@ -1,4 +1,14 @@
 defmodule CouchGears do
+  @moduledoc """
+  This is a main module for every gear application.
+  Actually, it's a simple wrapper around `Dynamo` module.
+
+  Check the `Dynamo` module for examples and documentation.
+
+  Developers can use module functions to configure and receive
+  access to execution environment.
+  """
+
 
   @doc false
   defmacro __using__(_) do
@@ -19,6 +29,8 @@ defmodule CouchGears do
   end
 
 
+  @doc false
+  def version, do: "0.5.0.dev"
 
   @doc false
   def env do
@@ -48,9 +60,4 @@ defmodule CouchGears do
 
   @doc false
   def gears(apps), do: :application.set_env(:couch_gears, :gears, apps)
-
-
-  @doc false
-  def version, do: "0.1.0.dev"
-
 end

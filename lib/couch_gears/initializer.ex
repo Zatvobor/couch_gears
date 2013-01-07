@@ -8,19 +8,18 @@ defmodule CouchGears.Initializer do
   couch_gears={'Elixir-CouchGears-Initializer', start_link, [[{env, <<"prod">>}]]}
   """
   def start_link(opts) do
-    # Asserts start up options
     configure_gears(opts)
 
-    # Firstly set up a load path for Elixir
+    # Firstly setup a load path for Elixir
     :erlang.bitstring_to_list(@root_path <> "/deps/elixir/lib/elixir/ebin") /> :code.add_pathz
 
-    # Appends all dependencies
+    # Appends runtime dependencies
     Code.append_path(@root_path <> "/deps/elixir/lib/mix/ebin")
     Code.append_path(@root_path <> "/deps/elixir/lib/iex/ebin")
     Code.append_path(@root_path <> "/deps/dynamo/ebin")
     Code.append_path(@root_path <> "/deps/mimetypes/ebin")
 
-    # Set up gears environment
+    # Setups gears environment
     start_gears_dependencies
     configure_httpd_handlers
     initialize_gears

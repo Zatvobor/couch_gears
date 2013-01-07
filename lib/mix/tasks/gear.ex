@@ -1,17 +1,19 @@
 defmodule Mix.Tasks.Gear do
-  use Mix.Task
-
-  import Mix.Generator
-  import Mix.Utils, only: [camelize: 1, underscore: 1]
-
-  @version CouchGears.Mixfile.project[:version]
-  @shortdoc "Create a new CouchGears' application"
-
 
   @moduledoc """
       mix gear - generates hello application
       mix gear application_name - generates specified application
   """
+
+  @version CouchGears.Mixfile.project[:version]
+  @shortdoc "Create a new CouchGears' application"
+
+  use Mix.Task
+
+  import Mix.Generator
+  import Mix.Utils, only: [camelize: 1, underscore: 1]
+
+
   def run(argv) do
     name = case argv do
       [] -> "hello_world"
@@ -56,7 +58,7 @@ defmodule Mix.Tasks.Gear do
     @doc false
     def project do
       [ app: :<%= @name %>,
-        version: "0.1.0.dev",
+        version: <%= @version %>,
         compilers: [:elixir, :app],
         deps_path: "../../../couch_gears/deps",
         deps: deps ]

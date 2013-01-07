@@ -14,11 +14,6 @@ defmodule CouchGears.Case do
   end
 
 
-  @doc false
-  defmacro get(params) do
-    do_method :GET, params
-  end
-
   defmacro get(params) do
     do_method :GET, params
   end
