@@ -1,6 +1,7 @@
 Code.prepend_path("deps/couchdb/src/couchdb")
 
 defmodule CouchGears.Mochiweb.HTTP do
+  @moduledoc false
 
   defrecord Httpd, Record.extract(:httpd, from: "couch_db.hrl")
   use Dynamo.HTTP.Behaviour, [:httpd, :db_name]
@@ -8,7 +9,6 @@ defmodule CouchGears.Mochiweb.HTTP do
 
   @doc false
   def new(app, httpd, db_name) do
-    # convert to Elixir's record
     httpd = Httpd.new(httpd)
 
     connection(

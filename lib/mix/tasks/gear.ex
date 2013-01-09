@@ -1,12 +1,7 @@
 defmodule Mix.Tasks.Gear do
 
-  @moduledoc """
-      mix gear - generates hello application
-      mix gear application_name - generates specified application
-  """
-
   @version CouchGears.Mixfile.project[:version]
-  @shortdoc "Create a new CouchGears' application"
+  @shortdoc "Create a new (or default hello_world) CouchGear application"
 
   use Mix.Task
 
@@ -14,6 +9,22 @@ defmodule Mix.Tasks.Gear do
   import Mix.Utils, only: [camelize: 1, underscore: 1]
 
 
+  @moduledoc """
+  Creates a new CouchGear application.
+  It expects an `application_name`. A project will be created in `apps/application_name`
+  and should be commited.
+
+  Check `CouchGears` module for documentation.
+
+  ## Examples
+
+      mix gear hello_world
+
+  Is equivalent to:
+
+      mix gear
+
+  """
   def run(argv) do
     name = case argv do
       [] -> "hello_world"
@@ -58,7 +69,7 @@ defmodule Mix.Tasks.Gear do
     @doc false
     def project do
       [ app: :<%= @name %>,
-        version: <%= @version %>,
+        version: "<%= @version %>",
         compilers: [:elixir, :app],
         deps_path: "../../../couch_gears/deps",
         deps: deps ]
@@ -78,15 +89,13 @@ defmodule Mix.Tasks.Gear do
   defmodule ApplicationRouter do
     use CouchGears.Router
 
-    # Application level filters
-
-    # Sets CouchGears backend version info as a 'Server' response header
+    # Sets CouchGears version info as a 'Server' response header.
     # filter CouchGears.Filters.ServerVersion
 
-    # Sets 'application/json' by default
+    # Sets 'Content-Type: application/json' response header.
     filter CouchGears.Filters.ResponseTypeJSON
 
-    # Accepts only 'application/json' requests. Otherwise, returns a 'Bad Request' response
+    # Accepts only 'Content-Type: application/json' request. Otherwise, returns a '400 Bad Request' response
     # filter CouchGears.Filters.OnlyRequestTypeJSON
 
 
@@ -101,7 +110,7 @@ defmodule Mix.Tasks.Gear do
     use CouchGears
 
     config :gear,
-    # The dbs that enabled for application
+    # application dbs
     known_db: :all
 
 
@@ -118,7 +127,7 @@ defmodule Mix.Tasks.Gear do
     endpoint: ApplicationRouter
 
 
-    # The environment's specific options
+    # The environment specific options
     environment "dev" do
       config :dynamo, compile_on_demand: true, reload_modules: true
     end

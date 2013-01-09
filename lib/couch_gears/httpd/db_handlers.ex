@@ -1,4 +1,5 @@
 defmodule CouchGears.Httpd.DbHandlers do
+  @moduledoc false
 
   @doc false
   def handle_db_gears_req(httpd, db) do

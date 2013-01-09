@@ -1,4 +1,5 @@
 defmodule CouchGears.Mochiweb.HTTP.Test do
+  @moduledoc false
 
   defrecord Httpd, Record.extract(:httpd, from: "couch_db.hrl")
 
@@ -46,5 +47,4 @@ defmodule CouchGears.Mochiweb.HTTP.Test do
       path_parts: path_parts
     )
   end
-
 end
