@@ -1,10 +1,9 @@
-Code.prepend_path("deps/couchdb/src/couchdb")
-
 defmodule CouchGears.Mochiweb.HTTP do
   @moduledoc false
 
+  Code.prepend_path("include")
   defrecord Httpd, Record.extract(:httpd, from: "couch_db.hrl")
-  use Dynamo.HTTP.Behaviour, [:httpd, :db_name]
+  use Dynamo.Connection.Behaviour, [:httpd, :db_name]
 
 
   @doc false
@@ -19,8 +18,8 @@ defmodule CouchGears.Mochiweb.HTTP do
       method: original_method(httpd),
       params: query_string(httpd),
       req_headers: req_headers(httpd),
-      cookies: cookies(httpd),
-      before_send: Dynamo.HTTP.default_before_send
+      req_cookies: req_cookies(httpd),
+      before_send: Dynamo.Connection.default_before_send
     )
   end
 
@@ -38,6 +37,9 @@ defmodule CouchGears.Mochiweb.HTTP do
     :proplists.get_value(key, resp_headers)
   end
 
+  def path(connection(httpd: httpd)) do
+    httpd.mochi_req.get(:raw_path)
+  end
 
 
   # Connection helpers
@@ -61,7 +63,7 @@ defmodule CouchGears.Mochiweb.HTTP do
     Enum.map headers, fn({k, v}) -> {to_binary(k), to_binary(v)} end
   end
 
-  def cookies(httpd) do
+  def req_cookies(httpd) do
     Enum.map httpd.mochi_req.parse_cookie, fn({k, v}) -> {list_to_atom(k), list_to_binary(v)} end
   end
 
@@ -69,12 +71,14 @@ defmodule CouchGears.Mochiweb.HTTP do
   # Should be checked and removed/redefined
 
   def path_segments(_a), do: panic!
-  def path(_a), do: panic!
   def version(_a), do: panic!
-  def req_cookies(_a), do: panic!
 
 
-  # Response handlers
+  # Response API
+
+  def already_sent?(connection(state: state)) do
+    state == :sent
+  end
 
   def resp_body(props, :json, conn) when is_list(props) do
     conn.resp_body(:ejson.encode({props}))
@@ -82,8 +86,17 @@ defmodule CouchGears.Mochiweb.HTTP do
 
   def send(code, body, connection) do
     connection(httpd: httpd, resp_headers: headers, resp_cookies: cookies) = connection
-    httpd.mochi_req.respond({code, CouchGears.Mochiweb.Utils.get_resp_headers(headers, cookies), body})
+    mochiweb_response = httpd.mochi_req.respond({code, CouchGears.Mochiweb.Utils.get_resp_headers(headers, cookies), body})
+
+    # returns sended connection
+    connection(connection,
+      resp_body: nil,
+      status: mochiweb_response.get(:code),
+      state: :sent)
   end
+
+
+  # Pending things
 
   def fetch(_a,_b), do: panic!
   def sendfile(_a,_b), do: panic!
@@ -94,5 +107,4 @@ defmodule CouchGears.Mochiweb.HTTP do
   defp panic! do
     raise "Something wrong with it. Submit the github/issue, please"
   end
-
 end

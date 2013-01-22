@@ -1,6 +1,7 @@
 defmodule CouchGears.Mochiweb.HTTP.Test do
   @moduledoc false
 
+  Code.prepend_path("include")
   defrecord Httpd, Record.extract(:httpd, from: "couch_db.hrl")
 
 

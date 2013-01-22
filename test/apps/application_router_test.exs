@@ -21,13 +21,18 @@ defmodule ApplicationRouterTest do
 
 
   test "returns not_found" do
-    assert get(path: "u/n/k/n/o/w/n").status == 404
+    conn = get(path: "u/n/k/n/o/w/n")
+    assert conn.status == 404
+    refute conn.already_sent?
   end
 
   test "dispatches on root" do
     conn = get(path: "/")
 
+    # IO.puts inspect(conn)
+
     assert conn.status == 200
+    assert conn.already_sent?
     assert conn.resp_body == "ok"
     assert conn.assigns[:value] == :root
   end

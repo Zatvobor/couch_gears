@@ -6,7 +6,7 @@ defmodule CouchGears.Mochiweb.HTTP.TestTest do
   @subject CouchGears.Mochiweb.HTTP.Test
 
 
-  test "returns test connection by path" do
+  test "returns under test connection" do
     conn = @subject.new("/a/b/c", :GET, headers: [{"Content-Type", "application/json"}])
 
     assert is_record(conn, CouchGears.Mochiweb.HTTP)

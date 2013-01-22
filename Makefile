@@ -1,20 +1,26 @@
 ELIXIR_PATH := deps/elixir/bin
 
-setup: get-deps compile
+setup: get-deps compile test
 
+
+get-couchdb-deps:
+	@ cd deps && git clone -b 1.2.x git://github.com/apache/couchdb.git
 
 get-deps:
-	@ mkdir deps && cd deps && git clone -b 1.2.x git://github.com/apache/couchdb.git
+	@ ./rebar get-deps compile
+	@ PATH=$(PATH):$(ELIXIR_PATH) mix do deps.get, deps.compile
 
-compile: clean couch_gears test
+
+compile: clean elixir
 
 clean:
 	@ rm -rf ebin/ && PATH=$(PATH):$(ELIXIR_PATH) mix clean
 
-couch_gears:
-	@ PATH=$(PATH):$(ELIXIR_PATH) mix do deps.get, compile
+elixir:
+	@ PATH=$(PATH):$(ELIXIR_PATH) mix compile
 
-test: test_couch_gears
 
-test_couch_gears:
+test: test_elixir
+
+test_elixir:
 	@ PATH=$(PATH):$(ELIXIR_PATH) mix test

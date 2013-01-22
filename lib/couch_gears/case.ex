@@ -30,13 +30,16 @@ defmodule CouchGears.Case do
   @doc false
   defmacro __using__(_) do
     quote do
-      Code.prepend_path File.expand_path("../../../deps/couchdb/src/couchdb", unquote(__FILE__))
-      Code.prepend_path File.expand_path("../../../deps/couchdb/src/mochiweb", unquote(__FILE__))
-      Code.prepend_path File.expand_path("../../../deps/couchdb/src/ejson", unquote(__FILE__))
+      CouchGears.env("test")
+
+      # prepends Couch dependency paths
+      Enum.each ["couchdb", "mochiweb", "ejson"], fn(app) ->
+        app_path     = "../../../deps/couchdb/src/" <> app
+        relative_to = unquote(__FILE__)
+        Code.prepend_path Path.expand(app_path, relative_to)
+      end
 
       import unquote(__MODULE__)
-
-      CouchGears.env("test")
     end
   end
 
@@ -62,12 +65,15 @@ defmodule CouchGears.Case do
 
   @doc false
   def do_method(method, params) do
-    quote do: unquote(__MODULE__).process @app, unquote(method), unquote(params)
+    quote do
+      {module, method, params} = {unquote(__MODULE__), unquote(method), unquote(params)}
+      module.process @app, method, params
+    end
   end
 
 
   @doc """
-  So in case you want to dispatch request to different gear application.
+  So, in case you want to dispatch request to different gear application.
   This function may be useful.
   """
   def process(app, method, params) do
@@ -81,6 +87,11 @@ defmodule CouchGears.Case do
     if conn.state == :unset do
       raise "#{inspect app}.service returned a connection that did not respond yet"
     end
+
+    if conn.state == :set do
+      # conn.send
+    end
+
     conn
   end
 end
