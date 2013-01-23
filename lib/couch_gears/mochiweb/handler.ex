@@ -10,8 +10,9 @@ defmodule CouchGears.Mochiweb.Handler do
 
     if is_record(conn, CouchGears.Mochiweb.HTTP) do
       case conn.state do
-        :set   -> { :ok, conn.send }
+        :set   -> { :ok, conn.send() }
         :unset -> { :ok, conn.send(500, "Missing response", conn) }
+        :sent  -> { :ok, "Already sent" }
       end
     else
       raise "Expected 'service/1' function to return a CouchGears.Mochiweb.HTTP, got #{inspect(conn)}"
