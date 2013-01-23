@@ -77,7 +77,7 @@ defmodule CouchGears.Case do
   This function may be useful.
   """
   def process(app, method, params) do
-    conn = CouchGears.Mochiweb.HTTP.Test.new(params[:path], method, params)
+    conn = CouchGears.Mochiweb.Connection.Test.new(params[:path], method, params)
     conn = app.service(conn)
 
     if not is_tuple(conn) or not function_exported?(elem(conn, 0), :state, 1) do

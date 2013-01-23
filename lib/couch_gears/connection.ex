@@ -1,4 +1,4 @@
-defmodule CouchGears.Mochiweb.HTTP do
+defmodule CouchGears.Mochiweb.Connection do
   @moduledoc false
 
   Code.prepend_path("include")
