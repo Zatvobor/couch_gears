@@ -88,10 +88,6 @@ defmodule CouchGears.Case do
       raise "#{inspect app}.service returned a connection that did not respond yet"
     end
 
-    if conn.state == :set do
-      # conn.send
-    end
-
     conn
   end
 end

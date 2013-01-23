@@ -76,7 +76,13 @@ defmodule CouchGears.Mochiweb.HTTP do
 
   # Response API
 
-  def already_sent?(connection(state: state)) do
+  @doc false
+  def already_sent?(connection(app: :under_test, state: state)) do
+    state == :set
+  end
+
+  @doc false
+  def already_sent?(connection(app: app, state: state)) do
     state == :sent
   end
 
@@ -86,9 +92,10 @@ defmodule CouchGears.Mochiweb.HTTP do
 
   def send(code, body, connection) do
     connection(httpd: httpd, resp_headers: headers, resp_cookies: cookies) = connection
-    mochiweb_response = httpd.mochi_req.respond({code, CouchGears.Mochiweb.Utils.get_resp_headers(headers, cookies), body})
 
-    # returns sended connection
+    merged_headers    = CouchGears.Mochiweb.Utils.get_resp_headers(headers, cookies)
+    mochiweb_response = httpd.mochi_req.respond({code, merged_headers, body})
+
     connection(connection,
       resp_body: nil,
       status: mochiweb_response.get(:code),

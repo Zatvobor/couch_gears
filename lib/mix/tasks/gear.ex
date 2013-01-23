@@ -47,8 +47,8 @@ defmodule Mix.Tasks.Gear do
     create_directory "config"
     create_file "config/application.ex", app_template(assigns)
 
-    create_directory "app/routers"
-    create_file "app/routers/application_router.ex", app_router_text
+    create_directory "web/routers"
+    create_file "web/routers/application_router.ex", app_router_text
 
     create_directory "test/" <> name
     create_file "test/test_helper.exs", test_helper_text
@@ -110,21 +110,16 @@ defmodule Mix.Tasks.Gear do
     use CouchGears
 
     config :gear,
-    # application dbs
-    known_db: :all
+      # application dbs
+      known_db: :all
 
 
     config :dynamo,
-    # Compiles modules as they are needed
-    # compile_on_demand: true,
-    # Reload modules after they are changed
-    # reload_modules: true,
+      # The environment this Dynamo runs on
+      env: CouchGears.env,
 
-    # The environment this Dynamo runs on
-    env: CouchGears.env,
-
-    # The endpoint to dispatch requests too
-    endpoint: ApplicationRouter
+      # The endpoint to dispatch requests too
+      endpoint: ApplicationRouter
 
 
     # The environment specific options

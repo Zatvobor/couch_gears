@@ -12,7 +12,7 @@ defmodule CouchGears.Mochiweb.HTTP.Test do
 
   @doc false
   def new(httpd) do
-    CouchGears.Mochiweb.HTTP.new(:uder_test, httpd, :under_test)
+    CouchGears.Mochiweb.HTTP.new(:under_test, httpd, :under_test)
   end
 
 
