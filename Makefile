@@ -6,6 +6,9 @@ setup: get-deps compile test
 get-couchdb-deps:
 	@ cd deps && git clone -b 1.2.x git://github.com/apache/couchdb.git
 
+setup-dev-couchdb:
+	@ cd deps/couchdb && ./bootstrap && ./configure && make dev
+
 get-deps:
 	@ ./rebar get-deps compile
 	@ PATH=$(PATH):$(ELIXIR_PATH) mix do deps.get, deps.compile
