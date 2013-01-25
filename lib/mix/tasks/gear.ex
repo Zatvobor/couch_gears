@@ -110,9 +110,7 @@ defmodule Mix.Tasks.Gear do
     use CouchGears.App
 
     config :gear,
-      # application dbs
-      known_db: :all
-
+      handlers: [ dbs: all ]
 
     config :dynamo,
       # The environment this Dynamo runs on

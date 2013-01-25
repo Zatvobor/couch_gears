@@ -82,7 +82,7 @@ defmodule CouchGears.Mochiweb.Connection do
   end
 
   @doc false
-  def already_sent?(connection(app: app, state: state)) do
+  def already_sent?(connection(state: state)) do
     state == :sent
   end
 

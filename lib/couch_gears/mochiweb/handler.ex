@@ -29,15 +29,19 @@ defmodule CouchGears.Mochiweb.Handler do
   Check the `CouchGears.Initializer` module details.
   """
   def handle_db_gears_req(httpd, db) do
-    db_name = :erlang.element(15, db)
+    db_name = db_name(db)
 
     List.last Enum.map CouchGears.gears, fn(app) ->
-      if app.config[:gear][:known_db] == :all do
+      app_config = CouchGears.App.normalize_config(app)
+      if app_config[:handlers][:dbs] == :all do
         call(app, httpd, db_name)
       else
-        raise "Bad value for the :known_db option (enabled only :all)"
+        raise "Bad value for the :dbs options (enabled only :all)"
       end
     end
   end
+
+
+  defp db_name(db), do: :erlang.element(15, db)
 
 end
