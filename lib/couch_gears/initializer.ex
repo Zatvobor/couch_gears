@@ -18,18 +18,18 @@ defmodule CouchGears.Initializer do
     [daemons]
     couch_gears={'Elixir-CouchGears-Initializer', start_link, [[{env, <<"prod">>}]]}
 
-  Finally, notice that after initialization a CouchGears sets `httpd_db_handlers` option which handle
-  incoming `_gears` requests.
+  Finally, notice that after initialization a CouchGears sets a `httpd_db_handlers` option which handle
+  incoming `/db/_gears` requests.
 
   Is a equivalent to:
 
     [httpd_db_handlers]
-    _gears = {'Elixir-CouchGears-Httpd-DbHandlers', handle_db_gears_req}
+    _gears = {'Elixir-CouchGears-Mochiweb-Handler', handle_db_gears_req}
 
   """
 
   @root_path Path.expand      "../../..", __FILE__
-  @httpd_db_handlers          "Elixir-CouchGears-Httpd-DbHandlers"
+  @httpd_db_handlers          "Elixir-CouchGears-Mochiweb-Handler"
   @gears_request_prefix       "_gears"
 
   @doc """
@@ -50,7 +50,7 @@ defmodule CouchGears.Initializer do
 
     # Setups gears environment
     start_gears_dependencies
-    configure_httpd_handlers
+    setup_httpd_handlers
     initialize_gears
 
     {:ok, self()}
@@ -64,12 +64,10 @@ defmodule CouchGears.Initializer do
     :application.start(:dynamo)
   end
 
-  defp configure_httpd_handlers do
+  defp setup_httpd_handlers do
+    # setups db handler
     :couch_config.set(
-      "httpd_db_handlers",
-      "#{@gears_request_prefix}",
-      "{'#{@httpd_db_handlers}', handle_db_gears_req}",
-      false
+      "httpd_db_handlers", "#{@gears_request_prefix}", "{'#{@httpd_db_handlers}', handle_db_gears_req}", false
     )
   end
 

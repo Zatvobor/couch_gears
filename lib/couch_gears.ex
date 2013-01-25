@@ -76,7 +76,7 @@ defmodule CouchGears do
   def root_path(value), do: :application.set_env(:couch_gears, :root_path, value)
 
   @doc """
-  Gets all initialized applications. Check the `CouchGears.Httpd.DbHandlers` module
+  Gets all initialized applications
   for example.
   """
   def gears do
