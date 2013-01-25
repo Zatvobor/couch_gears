@@ -6,7 +6,8 @@ defmodule ApplicationTest do
 
   test "returns a default environment" do
     defmodule App1 do
-      use CouchGears
+      use CouchGears.App
+
       config :dynamo, env: "dev", endpoint: Endpoint
     end
 
@@ -15,7 +16,8 @@ defmodule ApplicationTest do
 
   test "applies an environment's config" do
     defmodule App2 do
-      use CouchGears
+      use CouchGears.App
+
       config :dynamo, env: CouchGears.env, endpoint: Endpoint
 
       environment "dev" do
@@ -30,7 +32,8 @@ defmodule ApplicationTest do
 
   test "uses environment as a regexp" do
     defmodule App3 do
-      use CouchGears
+      use CouchGears.App
+
       config :dynamo, env: CouchGears.env, endpoint: Endpoint
 
       environment %r(prod|dev) do

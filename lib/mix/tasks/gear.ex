@@ -107,7 +107,7 @@ defmodule Mix.Tasks.Gear do
 
   embed_template :app, """
   defmodule <%= Mix.Utils.camelize(@name) %>Application do
-    use CouchGears
+    use CouchGears.App
 
     config :gear,
       # application dbs
