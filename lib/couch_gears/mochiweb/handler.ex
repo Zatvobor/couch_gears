@@ -5,8 +5,12 @@ defmodule CouchGears.Mochiweb.Handler do
   """
 
   @doc """
-  Calls the gear app
+  Pushes a Couch's request into the corresponding gear application
   """
+  def call(nil, httpd, db_name) do
+    raise "Could not find the corresponding gear application"
+  end
+
   def call(app, httpd, db_name) do
     conn = app.service(CouchGears.Mochiweb.Connection.new(app, httpd, db_name))
 
@@ -29,19 +33,20 @@ defmodule CouchGears.Mochiweb.Handler do
   Check the `CouchGears.Initializer` module details.
   """
   def handle_db_gears_req(httpd, db) do
-    db_name = db_name(db)
+    req_db_name = db_name(db)
 
-    List.last Enum.map CouchGears.gears, fn(app) ->
+    app = Enum.find CouchGears.gears, fn(app) ->
+      # seems not as good as should be!
       app_config = CouchGears.App.normalize_config(app)
-      if app_config[:handlers][:dbs] == :all do
-        call(app, httpd, db_name)
-      else
-        raise "Bad value for the :dbs options (enabled only :all)"
+      case app_config[:handlers][:dbs] do
+        :all -> true
+        list -> Enum.find list, fn(db) -> req_db_name == db end
       end
     end
+
+    call(app, httpd, req_db_name)
   end
 
 
-  defp db_name(db), do: :erlang.element(15, db)
-
+  defp db_name(db), do: binary_to_atom(:erlang.element(15, db))
 end
