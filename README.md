@@ -26,7 +26,7 @@ configure a Couch DB `local.ini` config:
 create your first `hello_world` gear:
 
     # push elixir to the PATH env
-    export PATH="$PATH:/path/to/couch_gears/deps/elixir/bin"
+    export PATH=$PATH:deps/elixir/bin
     mix gear
 
     # or use `elixir` commands directly
