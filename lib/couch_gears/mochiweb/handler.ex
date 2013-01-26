@@ -47,6 +47,20 @@ defmodule CouchGears.Mochiweb.Handler do
     call(app, httpd, req_db_name)
   end
 
+  @doc """
+  This function invoked from Couch DB directly and behaves as a `httpd_global_handlers` handler
+  Check the `CouchGears.Initializer` module details.
+  """
+  def handle_global_gears_req(httpd) do
+    app = Enum.find CouchGears.gears, fn(app) ->
+      # seems not as good as should be!
+      app_config = CouchGears.App.normalize_config(app)
+      app_config[:handlers][:global]
+    end
+
+    call(app, httpd, :_global)
+  end
+
 
   defp db_name(db), do: binary_to_atom(:erlang.element(15, db))
 end

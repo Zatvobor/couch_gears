@@ -45,9 +45,13 @@ defmodule CouchGears.Mochiweb.Connection do
   # Connection helpers
 
   def path_info_segments(httpd) do
-    # cuts 'db_name' and '_gears' parts
-    [_a,_b | path_parts] = httpd.path_parts
-    path_parts
+    # cuts 'db_name' and '_gears' parts from the application `path_parts` environment
+    case httpd.path_parts do
+      # applies `:dbs` aware request
+      [_a, "_gears" | path_parts] -> path_parts
+      # applies `:global` awaare request
+      ["_gears" | path_parts]     -> path_parts
+    end
   end
 
   def original_method(httpd) do

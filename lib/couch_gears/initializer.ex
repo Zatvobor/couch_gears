@@ -18,10 +18,13 @@ defmodule CouchGears.Initializer do
     [daemons]
     couch_gears={'Elixir-CouchGears-Initializer', start_link, [[{env, <<"prod">>}]]}
 
-  Finally, notice that after initialization a CouchGears sets a `httpd_db_handlers` option which handle
-  incoming `/db/_gears` requests.
+  Finally, notice that after initialization a CouchGears sets both `httpd_db_handlers` and `httpd_global_handlers`
+  option which handles incoming `/db/_gears` or `/_gears` requests.
 
   Is a equivalent to:
+
+    [httpd_global_handlers]
+    _gears = {'Elixir-CouchGears-Mochiweb-Handler', handle_global_gears_req}
 
     [httpd_db_handlers]
     _gears = {'Elixir-CouchGears-Mochiweb-Handler', handle_db_gears_req}
@@ -65,7 +68,9 @@ defmodule CouchGears.Initializer do
   end
 
   defp setup_httpd_handlers do
-    # setups db handler
+    :couch_config.set(
+      "httpd_global_handlers", "#{@gears_request_prefix}", "{'#{@httpd_db_handlers}', handle_global_gears_req}", false
+    )
     :couch_config.set(
       "httpd_db_handlers", "#{@gears_request_prefix}", "{'#{@httpd_db_handlers}', handle_db_gears_req}", false
     )
