@@ -7,8 +7,9 @@ defmodule CouchGears.Mochiweb.Handler do
   @doc """
   Pushes a Couch DB request into the corresponding gear application
   """
-  def call(nil, _httpd, _db_name) do
-    raise "Could not find the corresponding gear application"
+  def call(nil, httpd, _db_name) do
+    mochiweb_request = :erlang.element(2, httpd)
+    { :ok, mochiweb_request.not_found() }
   end
 
   def call(app, httpd, db_name) do
