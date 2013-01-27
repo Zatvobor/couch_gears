@@ -5,9 +5,9 @@ defmodule CouchGears.Mochiweb.Handler do
   """
 
   @doc """
-  Pushes a Couch's request into the corresponding gear application
+  Pushes a Couch DB request into the corresponding gear application
   """
-  def call(nil, httpd, db_name) do
+  def call(nil, _httpd, _db_name) do
     raise "Could not find the corresponding gear application"
   end
 
@@ -25,8 +25,6 @@ defmodule CouchGears.Mochiweb.Handler do
     end
   end
 
-
-  # Couch DB httpd handlers
 
   @doc """
   This function invoked from Couch DB directly and behaves as a `httpd_db_handlers` handler
