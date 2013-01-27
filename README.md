@@ -1,7 +1,11 @@
-Couch Gears: A sexy convenience for customizing your Couch DB API as you need
------------------------------------------------------------------------------
+Couch Gears: A sexy convenience for customizing your Couch DB nodes as you need
+-------------------------------------------------------------------------------
 
-### Status: under active development and scoping (YOU're welcome!)
+In short, `Couch Gears` is a spatial extension for [Apache CouchDB](https://github.com/apache/couchdb) based on [Dynamo](https://github.com/josevalim/dynamo) and tries to make the most out of this wonderful marriage of technologies.
+
+
+### Status: under active development and  scoping (YOU're welcome!)
+### Current version: `0.5.0.dev`
 
 
 Installation Quickstart
@@ -15,17 +19,17 @@ After downloading, type:
 
 After passed tests, put in `couch_normalizer` to `couchdb` bash:
 
-    COUCH_NORMALIZER_PA_OPTIONS="-pa /var/www/couch_normalizer/current/ebin"
-    ERL_START_OPTIONS="$ERL_OS_MON_OPTIONS -sasl errlog_type error +K true +A 4 $ELIXIR_PA_OPTIONS $COUCH_NORMALIZER_PA_OPTIONS"
+    COUCH_NORMALIZER_PA_OPTIONS="-pa /path/to/couch_normalizer/current/ebin"
+    ERL_START_OPTIONS="$ERL_OS_MON_OPTIONS -sasl errlog_type error +K true +A 4 $COUCH_NORMALIZER_PA_OPTIONS"
 
 configure a Couch DB `local.ini` config:
 
     [daemons]
     couch_gears={'Elixir-CouchGears-Initializer', start_link, [[{env, <<"dev">>}]]}
 
-create your first `hello_world` gear:
+create your first `hello_world` gear application:
 
-    # push elixir to the PATH env
+    # export local elixir dependency to the PATH
     export PATH=$PATH:deps/elixir/bin
     mix gear
 
@@ -43,4 +47,11 @@ That is it:
     => {"ok":"Hello World"}
 
 
-Have a nice hacking! )
+Have a useful practice! )
+
+
+License
+-------
+
+`Couch Gears` source code is released under Apache 2 License.
+Check [LICENSE](https://github.com/datahogs/couch_gears/blob/master/LICENSE) and [NOTICE](https://github.com/datahogs/couch_gears/blob/master/NOTICE) files for more details.
