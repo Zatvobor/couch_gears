@@ -47,7 +47,7 @@ That is it:
     => {"ok":"Hello World"}
 
 
-Have a useful practice! )
+Have an useful practice! )
 
 
 License
