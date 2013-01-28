@@ -16,11 +16,12 @@ defmodule CouchGears.Mochiweb.Handler do
     conn = app.service(CouchGears.Mochiweb.Connection.new(app, httpd, db_name))
 
     if is_record(conn, CouchGears.Mochiweb.Connection) do
-      case conn.state do
-        :set   -> { :ok, conn.send() }
-        :unset -> { :ok, conn.send(500, "Missing response", conn) }
-        :sent  -> { :ok, "Already sent" }
-      end
+      # case conn.state do
+      #   :set   -> { :ok, conn.send() }
+      #   :unset -> { :ok, conn.send(500, "Missing response", conn) }
+      #   :sent  -> { :ok, "Already sent" }
+      # end
+      { :ok, "success" }
     else
       raise "Expected 'service/1' function to return a CouchGears.Mochiweb.Connection, got #{inspect(conn)}"
     end
