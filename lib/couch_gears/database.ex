@@ -31,12 +31,6 @@ defmodule CouchGears.Database do
     database(raw_db: raw_db, db: Db.new(raw_db))
   end
 
-  @doc false
-  def find(ddoc, database(raw_db: _r) = db) do
-    { _, document } = do_find(ddoc, db)
-    document
-  end
-
 
   # Module functions
 
@@ -63,10 +57,20 @@ defmodule CouchGears.Database do
 
 
   @doc false
-  def find(db, ddoc), do: find(ddoc, open(db))
+  def find(_db, :no_db_file) do
+    :no_db_file
+  end
 
   @doc false
-  def find(db, :no_db_file), do: :no_db_file
+  def find(ddoc, database(raw_db: _r) = db) do
+    { _, document } = do_find(ddoc, db)
+    document
+  end
+
+  @doc false
+  def find(db, ddoc) do
+    find(ddoc, open(db))
+  end
 
 
 

@@ -91,3 +91,40 @@ defmodule CouchGears.Case do
     conn
   end
 end
+
+
+defmodule CouchGears.Case.Acceptance do
+  @moduledoc """
+  This module provides simple convenience for running acceptance tests from under a Couch DB environment.
+
+  Check the `@acceptances_path` directory for all available acceptance tests.
+
+  ## Starting:
+
+    $ deps/couchdb/utils/./run -i
+
+    > 'Elixir-CouchGears-Case-Acceptance':run().
+
+  """
+
+  @acceptances_path "/test/acceptances/*.exs"
+
+  @doc """
+  Runs the acceptance tests. It's invoked from under Couch DB interactive console.
+  """
+  def run do
+    append_exunit_paths
+
+    Enum.each Path.wildcard(CouchGears.root_path <> @acceptances_path), fn(test) ->
+      Code.load_file test
+    end
+
+    ExUnit.run
+  end
+
+
+  defp append_exunit_paths do
+    Code.append_path(CouchGears.root_path <> "/deps/elixir/lib/ex_unit/ebin")
+  end
+
+end
