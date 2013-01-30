@@ -3,17 +3,13 @@ Code.require_file "../../acceptance_helper.exs", __FILE__
 defmodule DatabaseInstanceAcceptance do
   use ExUnit.Case, async: true
 
-  import CouchGears.Database
-
-
-  # Data fixtures
-  @x [{"_id","x"},{"_rev","1-967a00dff5e02add41819138abb3284d"}]
-  @db "db"
+  use CouchGears.Database.Fixtures
 
 
 
   test "tries to open a missing db" do
-    assert open("missing_db") == :no_db_file
+    missing_db = open("missing_db")
+    assert missing_db == :no_db_file
   end
 
   test "opens a db" do
@@ -21,8 +17,13 @@ defmodule DatabaseInstanceAcceptance do
     assert is_record(db, CouchGears.Database)
   end
 
-  test "loads a document as a instance function" do
+  test "returns a raw document" do
     db = open(@db)
-    assert db.find("x") == @x
+    assert db.find_raw("x") == @raw_x_doc
+  end
+
+  test "returns a document as a hash dict" do
+    db = open(@db)
+    assert db.find("x").to_list == @x_doc
   end
 end

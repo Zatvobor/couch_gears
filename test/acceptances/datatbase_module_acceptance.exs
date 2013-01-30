@@ -3,22 +3,21 @@ Code.require_file "../../acceptance_helper.exs", __FILE__
 defmodule DatabaseModuleAcceptance do
   use ExUnit.Case, async: true
 
-  import CouchGears.Database
-
-
-  # Data fixtures
-  @x [{"_id","x"},{"_rev","1-967a00dff5e02add41819138abb3284d"}]
-  @db "db"
+  use CouchGears.Database.Fixtures
 
 
 
-  test "tries to find undefined document" do
-    assert find("missing_db", "missing_doc") == :no_db_file
-    assert find(@db, "missing_doc") == :missing
+  test "tries to find a undefined document" do
+    assert find_raw("missing_db", "missing_doc") == :no_db_file
+    assert find_raw(@db, "missing_doc") == :missing
   end
 
-  test "loads a document as a module function" do
-    assert find(@db, "x") == @x
+  test "returns a raw document" do
+    assert find_raw(@db, "x") == @raw_x_doc
+  end
+
+  test "returns a document as a hash dict" do
+    assert find(@db, "x").to_list == @x_doc
   end
 
 end

@@ -57,19 +57,25 @@ defmodule CouchGears.Database do
 
 
   @doc false
-  def find(_db, :no_db_file) do
-    :no_db_file
-  end
+  def find_raw(_db, :no_db_file), do: :no_db_file
 
   @doc false
-  def find(ddoc, database(raw_db: _r) = db) do
+  def find_raw(ddoc, database(raw_db: _r) = db) do
     { _, document } = do_find(ddoc, db)
     document
   end
 
   @doc false
-  def find(db, ddoc) do
-    find(ddoc, open(db))
+  def find_raw(db, ddoc), do: find_raw(ddoc, open(db))
+
+  @doc false
+  def find(a, b) do
+    doc = find_raw(a, b)
+
+    unless doc == :no_db_file do
+      doc = HashDict.new(doc)
+    end
+    doc
   end
 
 
