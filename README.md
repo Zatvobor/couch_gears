@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/datahogs/couch_gears.png?branch=master)](https://travis-ci.org/datahogs/couch_gears)
+
 Couch Gears: A sexy convenience for customizing your Couch DB nodes as you need
 -------------------------------------------------------------------------------
 
