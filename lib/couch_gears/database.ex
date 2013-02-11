@@ -24,26 +24,22 @@ defmodule CouchGears.Database do
   defrecordp :database, [:raw_db, :db]
 
 
-  # Instance functions
+  @doc false
+  def db(database(db: db)), do: db
 
   @doc false
-  def db(database(raw_db: raw_db)) do
-    database(raw_db: raw_db, db: Db.new(raw_db))
-  end
-
-
-  # Module functions
+  def raw_db(database(raw_db: raw_db)), do: raw_db
 
   @doc false
   def open(name) do
     db = do_open(name)
 
     unless db == :no_db_file do
-      db = database(raw_db: db)
+      db = database(raw_db: db, db: Db.new(db))
     end
+
     db
   end
-
 
   @doc false
   def open!(name) do
@@ -52,9 +48,15 @@ defmodule CouchGears.Database do
     if db == :no_db_file do
       raise "No db file"
     end
+
     db
   end
 
+  #doc false
+  def close(database(raw_db: raw_db)) do
+    :couch_db.close(raw_db)
+    database()
+  end
 
   @doc false
   def find_raw(_db, :no_db_file), do: :no_db_file

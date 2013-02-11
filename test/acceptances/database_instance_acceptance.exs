@@ -17,6 +17,14 @@ defmodule DatabaseInstanceAcceptance do
     assert is_record(db, CouchGears.Database)
   end
 
+  test "closes a db" do
+    db = open(@db)
+    db = db.close()
+
+    refute db.raw_db
+    refute db.db
+  end
+
   test "returns a raw document" do
     db = open(@db)
     assert db.find_raw("x") == @raw_x_doc
