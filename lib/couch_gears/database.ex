@@ -18,6 +18,9 @@ defmodule CouchGears.Database do
       CouchGears.Database.find("db", "x")
   """
 
+  alias CouchGears.Database.Helpers, as: Helpers
+
+
   Code.prepend_path("include")
   defrecord Db, Record.extract(:db, from: "couch_db.hrl")
 
@@ -75,8 +78,9 @@ defmodule CouchGears.Database do
     doc = find_raw(a, b)
 
     unless doc == :no_db_file do
-      doc = HashDict.new(doc)
+      doc = HashDict.new(doc, Helpers.from_list_to_hash_dict_callback)
     end
+
     doc
   end
 
