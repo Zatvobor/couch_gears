@@ -65,13 +65,13 @@ defmodule CouchGears.Database do
   def find_raw(_db, :no_db_file), do: :no_db_file
 
   @doc false
-  def find_raw(ddoc, database(raw_db: _r) = db) do
-    { _, document } = do_find(ddoc, db)
+  def find_raw(doc_id, database(raw_db: _r) = db) do
+    { _, document } = do_find(doc_id, db)
     document
   end
 
   @doc false
-  def find_raw(db, ddoc), do: find_raw(ddoc, open(db))
+  def find_raw(db, doc_id), do: find_raw(doc_id, open(db))
 
   @doc false
   def find(a, b) do
@@ -83,6 +83,25 @@ defmodule CouchGears.Database do
 
     doc
   end
+
+  @doc false
+  def update_raw(raw_doc, database(raw_db: raw_db) = db) when is_list(raw_doc) do
+    json_doc   = :couch_doc.from_json_obj({raw_doc})
+    {:ok, rev} = :couch_db.update_doc(raw_db, json_doc, [])
+    rev
+  end
+
+  @doc false
+  def update_raw(db, doc), do: update_raw(doc, open(db))
+
+  @doc false
+  def update(hash_doc, database(raw_db: raw_db) = db) when is_record(hash_doc, HashDict) do
+    raw_doc = Helpers.from_hash_dict_to_list(hash_doc)
+    update_raw(raw_doc, db)
+  end
+
+  @doc false
+  def update(db, hash_doc), do: update(hash_doc, open(db))
 
 
 
