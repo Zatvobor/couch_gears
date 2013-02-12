@@ -102,7 +102,7 @@ defmodule CouchGears.Database do
   end
 
   @doc false
-  def update_raw(db, doc), do: update_raw(doc, open(db))
+  def update_raw(db, raw_doc), do: update_raw(raw_doc, open(db))
 
   @doc false
   def update(hash_doc, db) when is_record(hash_doc, HashDict) and is_record(db, CouchGears.Database) do
