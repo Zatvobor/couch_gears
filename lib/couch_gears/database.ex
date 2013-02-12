@@ -94,6 +94,11 @@ defmodule CouchGears.Database do
     doc
   end
 
+  def find_with_rev(db, doc_id, rev) do
+    { _, document } = do_find_with_rev(doc_id, rev, db)
+    document
+  end
+
   @doc false
   def update_raw(raw_doc, database(raw_db: raw_db)) when is_list(raw_doc) do
     json_doc   = :couch_doc.from_json_obj({raw_doc})
@@ -154,4 +159,20 @@ defmodule CouchGears.Database do
         {:not_found, :missing}
     end
   end
+
+  defp do_find_with_rev(ddoc, rev, database(raw_db: raw_db)) do
+    case :couch_db.open_doc_revs(raw_db, ddoc, make_rev(rev), []) do
+      {:ok, [{:ok, doc}]} ->
+        {body} = :couch_doc.to_json_obj(doc, [])
+
+        {:ok, body}
+      _ ->
+        {:not_found, :missing}
+    end
+  end
+
+  defp make_rev(rev) do
+    [:couch_doc.parse_rev(rev)]
+  end
+
 end

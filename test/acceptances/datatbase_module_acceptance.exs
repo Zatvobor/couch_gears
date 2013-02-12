@@ -27,4 +27,15 @@ defmodule DatabaseModuleAcceptance do
     assert doc_x["_id"] == @doc_x
   end
 
+  test "returns a document with rev" do
+    db = DB.open(@fixture_db)
+    doc_x = DB.find(@fixture_db, @doc_x)
+    rev = doc_x["_rev"]
+    DB.update(doc_x, db)
+    doc_x = DB.find(@fixture_db, @doc_x)
+    assert doc_x["_rev"] != rev
+    doc_y = DB.find_with_rev(db, @doc_x, rev)
+    assert doc_y["_rev"] == rev
+  end
+
 end
