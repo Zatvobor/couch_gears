@@ -35,7 +35,12 @@ defmodule CouchGears.Database.Helpers do
   @doc """
   Returns true in case `dict` is a `HashDict`
   """
-  def is_hash_dict?(dict) when is_record(dict, HashDict), do: true
+  def is_hash_dict?(dict) do
+    if is_record(dict, HashDict) do
+      true
+    else
+      false
+    end
+  end
 
-  def is_hash_dict?(value), do: false
 end
