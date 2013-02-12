@@ -40,4 +40,14 @@ defmodule DatabaseModuleAcceptance do
     refute prev_rev == new_rev
   end
 
+  test "returns a document with rev" do
+    doc = DB.find(@fixture_db, @doc_x)
+    rev = doc["_rev"]
+
+    new_rev = DB.update(@fixture_db, doc)
+
+    refute new_rev == rev
+    assert DB.find_with_rev(@fixture_db, @doc_x, rev)["_rev"] == rev
+  end
+
 end
