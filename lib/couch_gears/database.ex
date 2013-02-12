@@ -55,17 +55,27 @@ defmodule CouchGears.Database do
     db
   end
 
-  #doc false
+  @doc false
   def close(database(raw_db: raw_db)) do
     :couch_db.close(raw_db)
     database()
   end
 
   @doc false
+  def create_db(name) do
+    :couch_server.create(name, [])
+  end
+
+  @doc false
+  def delete_db(name) do
+    :couch_server.delete(name, [])
+  end
+
+  @doc false
   def find_raw(_db, :no_db_file), do: :no_db_file
 
   @doc false
-  def find_raw(doc_id, database(raw_db: _r) = db) do
+  def find_raw(doc_id, db) when is_record(db, CouchGears.Database) do
     { _, document } = do_find(doc_id, db)
     document
   end
@@ -77,7 +87,7 @@ defmodule CouchGears.Database do
   def find(a, b) do
     doc = find_raw(a, b)
 
-    unless doc == :no_db_file do
+    unless doc == :no_db_file || doc == :missing do
       doc = HashDict.new(doc, Helpers.from_list_to_hash_dict_transform)
     end
 
@@ -85,7 +95,7 @@ defmodule CouchGears.Database do
   end
 
   @doc false
-  def update_raw(raw_doc, database(raw_db: raw_db) = db) when is_list(raw_doc) do
+  def update_raw(raw_doc, database(raw_db: raw_db)) when is_list(raw_doc) do
     json_doc   = :couch_doc.from_json_obj({raw_doc})
     {:ok, rev} = :couch_db.update_doc(raw_db, json_doc, [])
     rev
@@ -95,13 +105,35 @@ defmodule CouchGears.Database do
   def update_raw(db, doc), do: update_raw(doc, open(db))
 
   @doc false
-  def update(hash_doc, database(raw_db: raw_db) = db) when is_record(hash_doc, HashDict) do
+  def update(hash_doc, db) when is_record(hash_doc, HashDict) and is_record(db, CouchGears.Database) do
     raw_doc = Helpers.from_hash_dict_to_list(hash_doc)
     update_raw(raw_doc, db)
   end
 
   @doc false
   def update(db, hash_doc), do: update(hash_doc, open(db))
+
+  @doc false
+  def create_doc(db, raw_doc) when is_list(raw_doc) do
+    create_doc(raw_doc, open(db))
+  end
+
+  @doc false
+  def create_doc(db, hash_doc) when is_record(hash_doc, HashDict) do
+    create_doc(db, Helpers.from_hash_dict_to_list(hash_doc))
+  end
+
+  @doc false
+  def create_doc(hash_doc, db) when is_record(hash_doc, HashDict) and is_record(db, CouchGears.Database) do
+    raw_doc = create_doc(Helpers.from_hash_dict_to_list(hash_doc), db)
+    HashDict.new(raw_doc, Helpers.from_list_to_hash_dict_transform)
+  end
+
+  @doc false
+  def create_doc(raw_doc, db) when is_list(raw_doc) and is_record(db, CouchGears.Database) do
+    update_raw(raw_doc, db)
+    find_raw(raw_doc, db)
+  end
 
 
 
