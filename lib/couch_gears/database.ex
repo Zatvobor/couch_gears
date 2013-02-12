@@ -95,23 +95,23 @@ defmodule CouchGears.Database do
   end
 
   @doc false
-  def update_raw(raw_doc, database(raw_db: raw_db)) when is_list(raw_doc) do
+  def update(raw_doc, database(raw_db: raw_db)) when is_list(raw_doc) do
     json_doc   = :couch_doc.from_json_obj({raw_doc})
     {:ok, rev} = :couch_db.update_doc(raw_db, json_doc, [])
     rev
   end
 
   @doc false
-  def update_raw(db, raw_doc), do: update_raw(raw_doc, open(db))
-
-  @doc false
   def update(hash_doc, db) when is_record(hash_doc, HashDict) and is_record(db, CouchGears.Database) do
     raw_doc = Helpers.from_hash_dict_to_list(hash_doc)
-    update_raw(raw_doc, db)
+    update(raw_doc, db)
   end
 
   @doc false
-  def update(db, hash_doc), do: update(hash_doc, open(db))
+  def update(db, raw_doc) when is_list(raw_doc), do: update(raw_doc, open(db))
+
+  @doc false
+  def update(db, hash_doc) when is_record(hash_doc, HashDict), do: update(hash_doc, open(db))
 
   @doc false
   def create_doc(db, raw_doc) when is_list(raw_doc) do
@@ -131,7 +131,7 @@ defmodule CouchGears.Database do
 
   @doc false
   def create_doc(raw_doc, db) when is_list(raw_doc) and is_record(db, CouchGears.Database) do
-    update_raw(raw_doc, db)
+    update(raw_doc, db)
     find_raw(raw_doc, db)
   end
 

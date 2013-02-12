@@ -27,4 +27,17 @@ defmodule DatabaseModuleAcceptance do
     assert doc_x["_id"] == @doc_x
   end
 
+  test "updates a document as a hash dict" do
+    doc = DB.find(@fixture_db, @doc_x)
+    doc = HashDict.put(doc, "boolean", false)
+
+    prev_rev = doc["_rev"]
+    new_rev  = DB.update(@fixture_db, doc)
+
+    doc = DB.find(@fixture_db, @doc_x)
+
+    refute doc["boolean"]
+    refute prev_rev == new_rev
+  end
+
 end

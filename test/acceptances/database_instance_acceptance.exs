@@ -45,6 +45,23 @@ defmodule DatabaseInstanceAcceptance do
     assert doc["_id"] == @doc_x
   end
 
+  test "updates a document as a hash dict" do
+    db = DB.open(@fixture_db)
+    doc = db.find(@doc_x)
+
+    doc = HashDict.put(doc, "boolean", true)
+    prev_rev = doc["_rev"]
+    new_rev  = db.update(doc)
+
+    db.close()
+    db = DB.open(@fixture_db)
+
+    doc = db.find(@doc_x)
+
+    assert doc["boolean"]
+    refute prev_rev == new_rev
+  end
+
   test "creates a db" do
     DB.create_db("x1")
     db = DB.open!("x1")
