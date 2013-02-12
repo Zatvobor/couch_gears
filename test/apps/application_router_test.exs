@@ -21,10 +21,14 @@ defmodule ApplicationRouterTest do
 
 
   test "returns not_found" do
-    conn = get(path: "u/n/k/n/o/w/n")
 
-    assert conn.status == 404
-    refute conn.already_sent?
+    # conn = get(path: "u/n/k/n/o/w/n")
+    # assert conn.status == 404
+    # refute conn.already_sent?
+
+    assert_raise Dynamo.NotFoundError, fn ->
+      get(path: "u/n/k/n/o/w/n")
+    end
   end
 
   test "dispatches on root" do

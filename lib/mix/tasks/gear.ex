@@ -143,7 +143,12 @@ defmodule Mix.Tasks.Gear do
 
 
     test "returns not_found" do
-      assert get(path: "u/n/k/n/o/w/n").status == 404
+      # assert get(path: "u/n/k/n/o/w/n").status == 404
+
+      assert_raise Dynamo.NotFoundError, fn ->
+        get(path: "u/n/k/n/o/w/n")
+      end
+
     end
 
     test "returns body as json" do
