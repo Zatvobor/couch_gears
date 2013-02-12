@@ -1,4 +1,4 @@
-/ebin
-/deps
-/hello_gear
+ebin/*.beam
+deps/*
+hello_gear
 erl_crash.dump
