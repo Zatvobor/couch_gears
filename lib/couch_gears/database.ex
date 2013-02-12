@@ -166,7 +166,6 @@ defmodule CouchGears.Database do
     case :couch_db.open_doc(raw_db, ddoc) do
       {:ok, doc} ->
         {body} = :couch_doc.to_json_obj(doc, [])
-        # parse_to_record(body, db_name, id)
         {:ok, body }
       _ ->
         {:not_found, :missing}
