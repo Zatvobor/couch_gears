@@ -12,15 +12,15 @@ defmodule CouchGears.Database.HelpersTest do
   end
 
   test :from_list_to_hash_dict_callback do
-    received = HashDict.new([{"a", 1}, {"b", 2}], from_list_to_hash_dict_callback)
+    received = HashDict.new([{"a", 1}, {"b", 2}], from_list_to_hash_dict_transform)
     assert received ==  HashDict.new([{"a", 1}, {"b", 2}])
 
-    received = HashDict.new([{"a", 1}, {"b", 2}, {"d", {[{"c", 3}]}}], from_list_to_hash_dict_callback)
+    received = HashDict.new([{"a", 1}, {"b", 2}, {"d", {[{"c", 3}]}}], from_list_to_hash_dict_transform)
     assert received ==  HashDict.new([{"a", 1}, {"b", 2}, {"d", HashDict.new([{"c", 3}])}])
   end
 
   test :from_hash_dict_to_list do
-    dict = HashDict.new([{"a", 1}, {"b", 2}], from_list_to_hash_dict_callback)
+    dict = HashDict.new([{"a", 1}, {"b", 2}], from_list_to_hash_dict_transform)
     assert from_hash_dict_to_list(dict) == Enum.reverse [{"a", 1}, {"b", 2}]
   end
 

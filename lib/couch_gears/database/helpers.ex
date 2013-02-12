@@ -1,20 +1,26 @@
 defmodule CouchGears.Database.Helpers do
-  @moduledoc false
+  @moduledoc """
+  This module contains helper/adapter functions
+  for interoperability with CouchDB documents and its internal representations.
+
+  Some of functions just only a convenience which is used for acceptance/unit testing.
+  """
 
   @doc """
-  Converts a document body list to HashDict container
+  Returns `transform` function which is used for initializing a `HashDict`
   """
-  def from_list_to_hash_dict_callback do
+  def from_list_to_hash_dict_transform do
     fn({key, value}) ->
       case value do
-        { list_value } -> {key, HashDict.new(list_value, from_list_to_hash_dict_callback)}
+        { list_value } -> {key, HashDict.new(list_value, from_list_to_hash_dict_transform)}
         _ -> {key, value}
       end
     end
   end
 
   @doc """
-  Returns a list container from HashDict
+  Returns a list from `HashDict`. It doesn't used a `HashDict.to_list/1` function, because a document
+  could contain a nested `HashDict`s
   """
   def from_hash_dict_to_list(hash_dict) do
     Enum.map hash_dict.keys(), fn(el) ->
@@ -27,14 +33,9 @@ defmodule CouchGears.Database.Helpers do
   end
 
   @doc """
-  Returns true when HashDict else - false
+  Returns true in case `dict` is a `HashDict`
   """
-  def is_hash_dict?(dict) when is_record(dict, HashDict) do
-    true
-  end
+  def is_hash_dict?(dict) when is_record(dict, HashDict), do: true
 
-  @doc false
-  def is_hash_dict?(value) do
-    false
-  end
+  def is_hash_dict?(value), do: false
 end

@@ -78,7 +78,7 @@ defmodule CouchGears.Database do
     doc = find_raw(a, b)
 
     unless doc == :no_db_file do
-      doc = HashDict.new(doc, Helpers.from_list_to_hash_dict_callback)
+      doc = HashDict.new(doc, Helpers.from_list_to_hash_dict_transform)
     end
 
     doc
