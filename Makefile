@@ -1,5 +1,3 @@
-ELIXIR_PATH := deps/elixir/bin
-
 setup: get-deps compile test
 
 
@@ -19,13 +17,13 @@ get-deps:
 compile: clean elixir
 
 clean:
-	@ rm -rf ebin/ && PATH=$(PATH):$(ELIXIR_PATH) mix clean
+	@ rm -rf ebin/ && deps/elixir/bin/elixir deps/elixir/bin/mix clean
 
 elixir:
-	@ PATH=$(PATH):$(ELIXIR_PATH) mix compile
+	@ deps/elixir/bin/elixir deps/elixir/bin/mix compile
 
 
 test: test_elixir
 
 test_elixir:
-	@ PATH=$(PATH):$(ELIXIR_PATH) mix test
+	@ deps/elixir/bin/elixir deps/elixir/bin/mix mix test
