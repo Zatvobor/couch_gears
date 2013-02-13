@@ -26,4 +26,4 @@ elixir:
 test: test_elixir
 
 test_elixir:
-	@ deps/elixir/bin/elixir deps/elixir/bin/mix mix test
+	@ deps/elixir/bin/elixir deps/elixir/bin/mix test
