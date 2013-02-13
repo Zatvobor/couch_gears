@@ -9,9 +9,11 @@ get-couchdb-deps:
 setup-dev-couchdb:
 	@ cd deps/couchdb && ./bootstrap && ./configure && make dev
 
+
 get-deps:
-	@ ./rebar get-deps compile
-	@ PATH=$(PATH):$(ELIXIR_PATH) mix do deps.get, deps.compile
+	@ ./rebar get-deps make
+	@ cd deps/elixir && make compile
+	@ deps/elixir/bin/elixir deps/elixir/bin/mix deps.get
 
 
 compile: clean elixir

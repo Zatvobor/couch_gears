@@ -13,7 +13,7 @@ defmodule ApplicationRouterTest do
     end
 
     get "/json" do
-      conn.resp_body([{:ok, "Hello World"}], :json)
+      conn.resp_body("{\"ok\":\"Hello World\"}")
     end
   end
 

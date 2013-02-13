@@ -1,4 +1,6 @@
 [ "cowboy": {:git,"https://github.com/extend/cowboy.git","ea7af4b72444890df8cafc624ecdf7e32f7a62cb",[]},
   "dynamo": {:git,"https://github.com/josevalim/dynamo.git","5c10c334758d32bbc0f6604eaaecc432f47a2c0e",[]},
+  "ejson": {:git,"https://github.com/davisp/ejson.git","8503461aec0e7f39ed9896be816b5f5e8caa1bf8",[]},
   "mimetypes": {:git,"https://github.com/spawngrid/mimetypes.git","66ce6ebf3f296560cc8046846f8b8ee4a5ed18e7",[]},
+  "mochiweb": {:git,"https://github.com/mochi/mochiweb.git","edb954a15c4343d56345776e3f5c69e201714153",[tag: "v2.4.2"]},
   "ranch": {:git,"https://github.com/extend/ranch.git","fb7ed3807620f7534c617789e7347192838a419a",[]} ]
