@@ -92,7 +92,7 @@ defmodule CouchGears.Database do
   @doc """
   Returns a `document` as a raw `list` or either `:no_db_file`/`:missing` atom.
   """
-  def find_raw(_db, :no_db_file), do: :no_db_file
+  def find_raw(_doc_id, :no_db_file), do: :no_db_file
 
   def find_raw(doc_id, db) when is_record(db, CouchGears.Database) do
     { _, document } = do_find(doc_id, db)
@@ -117,7 +117,7 @@ defmodule CouchGears.Database do
   @doc """
   Returns a `document` as a `HashDict` or either `:no_db_file`/`:missing` atom.
   """
-  def find_with_rev(doc_id, rev, :no_db_file), do: :no_db_file
+  def find_with_rev(_doc_id, _rev, :no_db_file), do: :no_db_file
 
   def find_with_rev(doc_id, rev, database(raw_db: raw_db)) do
     case :couch_db.open_doc_revs(raw_db, doc_id, make_rev(rev), []) do
@@ -129,11 +129,13 @@ defmodule CouchGears.Database do
     end
   end
 
-  def find_with_rev(db, doc_id, rev), do: find_with_rev(doc_id, rev, open(db))
+  def find_with_rev(db_name, doc_id, rev), do: find_with_rev(doc_id, rev, open(db_name))
 
   @doc """
-  Creates a `document`.
+  Creates a `document` and return a `document` or either `:conflict`/`:no_db_file` atom.
   """
+  def create_doc(_doc, :no_db_file), do: :no_db_file
+
   def create_doc(db_name, raw_doc) when is_list(raw_doc) do
     create_doc(raw_doc, open(db_name))
   end
@@ -154,8 +156,10 @@ defmodule CouchGears.Database do
   end
 
   @doc """
-  Updates a particular `document` and return a `rev` string or `:conflict` atom.
+  Updates a particular `document` and return a `rev` string or either `:conflict`/`:no_db_file` atom.
   """
+  def update(_doc, :no_db_file), do: :no_db_file
+
   def update(raw_doc, database(raw_db: raw_db)) when is_list(raw_doc) do
     json_doc   = :couch_doc.from_json_obj({raw_doc})
     {:ok, rev} = :couch_db.update_doc(raw_db, json_doc, [])
