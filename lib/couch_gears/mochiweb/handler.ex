@@ -35,7 +35,7 @@ defmodule CouchGears.Mochiweb.Handler do
   Check the `CouchGears.Initializer` module details.
   """
   def handle_db_gears_req(httpd, db) do
-    { db_name, httpd } = { db_name(db), CouchGears.Records.convert(httpd) }
+    { db_name, httpd } = { db_name(db), Record.Httpd.new(httpd) }
 
     app = Enum.find CouchGears.gears, fn(app) ->
       # seems not as good as should be!
@@ -68,7 +68,7 @@ defmodule CouchGears.Mochiweb.Handler do
     call(app, httpd, :_global)
   end
 
-  def handle_global_gears_req(httpd), do: handle_global_gears_req(Record.convert(httpd))
+  def handle_global_gears_req(httpd), do: handle_global_gears_req(Record.Httpd.new(httpd))
 
 
   defp db_name(db), do: binary_to_atom(:erlang.element(15, db))
