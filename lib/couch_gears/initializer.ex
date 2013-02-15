@@ -63,8 +63,6 @@ defmodule CouchGears.Initializer do
   defp start_gears_dependencies do
     :application.start(:elixir)
     :application.start(:mix)
-    :application.start(:mimetypes)
-    :application.start(:dynamo)
   end
 
   defp setup_httpd_handlers do
