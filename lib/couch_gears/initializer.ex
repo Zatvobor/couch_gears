@@ -21,7 +21,7 @@ defmodule CouchGears.Initializer do
   Finally, notice that after initialization a CouchGears sets both `httpd_db_handlers` and `httpd_global_handlers`
   option which handles incoming `/db/_gears` or `/_gears` requests.
 
-  Is a equivalent to:
+  Is an equivalent to:
 
     [httpd_global_handlers]
     _gears = {'Elixir-CouchGears-Mochiweb-Handler', handle_global_gears_req}

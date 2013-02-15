@@ -9,7 +9,7 @@ defmodule CouchGears.Database do
       db.find("x")
       db.close()
 
-  works similarly as a statement:
+  Is an equivalent to:
 
       CouchGears.Database.find("db", "x")
 
