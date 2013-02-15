@@ -11,7 +11,7 @@ defmodule CouchGears.Mochiweb.Connection do
     httpd = Httpd.new(httpd)
     database = to_binary(db_name)
 
-    unless db_name == :under_test do
+    unless db_name == :under_test || db_name == :_global do
       database = CouchGears.Database.open(database)
     end
 
