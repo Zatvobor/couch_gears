@@ -4,6 +4,8 @@ defmodule CouchGears.Mochiweb.Handler do
   directly and sends response back to the Couch DB.
   """
 
+  alias CouchGears.Records, as: Record
+
   @doc """
   Pushes a Couch DB request into the corresponding gear application
   """
@@ -33,25 +35,30 @@ defmodule CouchGears.Mochiweb.Handler do
   Check the `CouchGears.Initializer` module details.
   """
   def handle_db_gears_req(httpd, db) do
-    req_db_name = db_name(db)
+    { db_name, httpd } = { db_name(db), CouchGears.Records.convert(httpd) }
 
     app = Enum.find CouchGears.gears, fn(app) ->
       # seems not as good as should be!
       app_config = CouchGears.App.normalize_config(app)
       case app_config[:handlers][:dbs] do
         :all -> true
-        list -> Enum.find list, fn(db) -> req_db_name == db end
+        list -> Enum.find list, fn(db) -> db_name == db end
       end
     end
 
-    call(app, httpd, req_db_name)
+    call(app, httpd, db_name)
   end
 
   @doc """
   This function invoked from Couch DB directly and behaves as a `httpd_global_handlers` handler
   Check the `CouchGears.Initializer` module details.
   """
-  def handle_global_gears_req(httpd) do
+  def handle_global_gears_req(Record.Httpd[path_parts: ["_gears", "_test"]] = httpd) do
+    CouchGears.Case.Acceptance.run
+    { :ok, httpd.mochi_req.respond({"202", [], ""}) }
+  end
+
+  def handle_global_gears_req(Record.Httpd[path_parts: ["_gears" | _path_parts]] = httpd) do
     app = Enum.find CouchGears.gears, fn(app) ->
       # seems not as good as should be!
       app_config = CouchGears.App.normalize_config(app)
@@ -60,6 +67,8 @@ defmodule CouchGears.Mochiweb.Handler do
 
     call(app, httpd, :_global)
   end
+
+  def handle_global_gears_req(httpd), do: handle_global_gears_req(Record.convert(httpd))
 
 
   defp db_name(db), do: binary_to_atom(:erlang.element(15, db))

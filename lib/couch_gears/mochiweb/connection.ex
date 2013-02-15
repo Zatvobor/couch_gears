@@ -1,14 +1,11 @@
 defmodule CouchGears.Mochiweb.Connection do
   @moduledoc false
 
-  Code.prepend_path("include")
-  defrecord Httpd, Record.extract(:httpd, from: "couch_db.hrl")
   use Dynamo.Connection.Behaviour, [:httpd, :database]
 
 
   @doc false
   def new(app, httpd, db_name) do
-    httpd = Httpd.new(httpd)
     database = to_binary(db_name)
 
     unless db_name == :under_test || db_name == :_global do

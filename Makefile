@@ -27,3 +27,6 @@ test: test_elixir
 
 test_elixir:
 	@ deps/elixir/bin/elixir deps/elixir/bin/mix test
+
+acceptance:
+	@ curl -H"Content-Type: application/json" http://127.0.0.1:5984/_gears/_test
