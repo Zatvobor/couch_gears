@@ -1,7 +1,7 @@
 Code.require_file "../../acceptance_helper.exs", __FILE__
 
 defmodule DatabaseModuleAcceptance do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
 
   @fixture_db "fixture"
   use CouchGears.Database.Fixtures
