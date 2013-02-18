@@ -3,20 +3,21 @@ Code.require_file "../test_helper.exs", __FILE__
 defmodule CouchGearsTest do
   use ExUnit.Case, async: true
 
+  import CouchGears
 
-  @subject CouchGears
-
-  def teardown_all(_), do: @subject.env("dev")
+  teardown_all do
+    env("dev")
+  end
 
 
   test "serves application environments" do
-    assert @subject.env == "test"
+    assert env == "test"
 
     System.put_env("MIX_ENV", "test")
-    assert @subject.env == "test"
+    assert env == "test"
 
-    @subject.env("prod")
-    assert @subject.env == "prod"
+    env("prod")
+    assert env == "prod"
   end
 
 end
