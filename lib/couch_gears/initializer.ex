@@ -48,7 +48,9 @@ defmodule CouchGears.Initializer do
     :supervisor.start_link({ :local, __MODULE__ }, __MODULE__, opts)
   end
 
-  @doc false
+  @doc """
+  Restarts the base supervisor through a `couch_secondary_services` functions such as `terminate_child` and `restart_child`
+  """
   def restart do
     :supervisor.terminate_child(:couch_secondary_services, :couch_gears)
     :supervisor.restart_child(:couch_secondary_services, :couch_gears)
@@ -97,7 +99,9 @@ defmodule CouchGears.Initializer do
     app.start_link
   end
 
-  @doc false
+  @doc """
+  Restarts a particular application through a `supervisor` functions such as `terminate_child` and `restart_child`
+  """
   def restart_app(name) do
     :supervisor.terminate_child(__MODULE__, name)
     :supervisor.restart_child(__MODULE__, name)

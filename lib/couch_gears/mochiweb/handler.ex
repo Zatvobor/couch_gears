@@ -55,33 +55,23 @@ defmodule CouchGears.Mochiweb.Handler do
   end
 
   @doc """
-  Starts acceptance tests
+  Passes request to `couch_gears` environment
   """
   def handle_global_gears_req(Record.Httpd[path_parts: ["_gears", "_test"]] = httpd) do
     CouchGears.Case.Acceptance.run
     { :ok, httpd.mochi_req.respond({"202", [], ""}) }
   end
 
-  @doc """
-  Restarts a `couch_gears` supervisor
-  """
   def handle_global_gears_req(Record.Httpd[path_parts: ["_gears", "_restart"]] = httpd) do
     CouchGears.Initializer.restart
     { :ok, httpd.mochi_req.respond({"202", [], ""}) }
   end
 
-  @doc """
-  Restarts a particular `gear` application
-  """
   def handle_global_gears_req(Record.Httpd[path_parts: ["_gears", name, "_restart"]] = httpd) do
     CouchGears.Initializer.restart_app(name)
     { :ok, httpd.mochi_req.respond({"202", [], ""}) }
   end
 
-  @doc """
-  This function invokes from Couch DB directly and behave as a `httpd_global_handlers` handler
-  Check the `CouchGears.Initializer` module details.
-  """
   def handle_global_gears_req(Record.Httpd[path_parts: ["_gears" | _path_parts]] = httpd) do
     app = Enum.find CouchGears.gears, fn(app) ->
       # seems not as good as should be!
