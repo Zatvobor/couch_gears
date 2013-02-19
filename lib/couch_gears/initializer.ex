@@ -49,6 +49,12 @@ defmodule CouchGears.Initializer do
   end
 
   @doc false
+  def restart do
+    :supervisor.terminate_child(:couch_secondary_services, :couch_gears)
+    :supervisor.restart_child(:couch_secondary_services, :couch_gears)
+  end
+
+  @doc false
   def init(opts) do
     configure_gears(opts)
 
@@ -68,7 +74,7 @@ defmodule CouchGears.Initializer do
 
     # Starts applications
     apps = Enum.map initialize_gears, fn(opts) ->
-      supervisor(__MODULE__, [opts], [id: opts[:app_name], function: :start_child, restart: :permanent])
+      supervisor(__MODULE__, [opts], [id: binary_to_atom(opts[:app_name]), function: :start_app, restart: :permanent])
     end
 
     spec = supervise(apps, [strategy: :one_for_one])
@@ -81,7 +87,7 @@ defmodule CouchGears.Initializer do
   @doc """
   Starts a particular application
   """
-  def start_child(opts // []) do
+  def start_app(opts // []) do
     File.cd(opts[:app_path])
     Code.load_file Path.join([opts[:app_path], "config", "application.ex"])
     app = Module.concat([Mix.Utils.camelize(opts[:app_name]) <> "Application"])
