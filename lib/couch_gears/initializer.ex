@@ -74,7 +74,7 @@ defmodule CouchGears.Initializer do
 
     # Starts applications
     apps = Enum.map initialize_gears, fn(opts) ->
-      supervisor(__MODULE__, [opts], [id: binary_to_atom(opts[:app_name]), function: :start_app, restart: :permanent])
+      supervisor(__MODULE__, [opts], [id: opts[:app_name], function: :start_app, restart: :permanent])
     end
 
     spec = supervise(apps, [strategy: :one_for_one])
@@ -95,6 +95,12 @@ defmodule CouchGears.Initializer do
     CouchGears.gears(CouchGears.gears ++ [app])
 
     app.start_link
+  end
+
+  @doc false
+  def restart_app(name) do
+    :supervisor.terminate_child(__MODULE__, name)
+    :supervisor.restart_child(__MODULE__, name)
   end
 
 

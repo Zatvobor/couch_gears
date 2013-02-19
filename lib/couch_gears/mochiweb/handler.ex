@@ -71,6 +71,14 @@ defmodule CouchGears.Mochiweb.Handler do
   end
 
   @doc """
+  Restarts a particular `gear` application
+  """
+  def handle_global_gears_req(Record.Httpd[path_parts: ["_gears", name, "_restart"]] = httpd) do
+    CouchGears.Initializer.restart_app(name)
+    { :ok, httpd.mochi_req.respond({"202", [], ""}) }
+  end
+
+  @doc """
   This function invokes from Couch DB directly and behave as a `httpd_global_handlers` handler
   Check the `CouchGears.Initializer` module details.
   """
