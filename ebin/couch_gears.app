@@ -16,7 +16,6 @@
                         'Elixir-CouchGears-Mochiweb-Connection-Test',
                         'Elixir-CouchGears-Mochiweb-Connection',
                         'Elixir-CouchGears-Mochiweb-Handler',
-                        'Elixir-CouchGears-Mochiweb-Utils',
                         'Elixir-CouchGears-Records-Httpd',
                         'Elixir-CouchGears-Records',
                         'Elixir-CouchGears-Router','Elixir-CouchGears',

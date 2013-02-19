@@ -131,13 +131,10 @@ defmodule CouchGears.Mochiweb.Connection do
   def send(code, body, connection) do
     connection(httpd: httpd, resp_headers: headers, resp_cookies: cookies) = connection
 
-    merged_headers    = CouchGears.Mochiweb.Utils.get_resp_headers(headers, cookies)
+    merged_headers    = Dynamo.Connection.Utils.merge_resp_headers(headers, cookies)
     mochiweb_response = httpd.mochi_req.respond({code, merged_headers, body})
 
-    connection(connection,
-      resp_body: nil,
-      status: mochiweb_response.get(:code),
-      state: :sent)
+    connection(connection, resp_body: nil, status: mochiweb_response.get(:code), state: :sent)
   end
 
 
