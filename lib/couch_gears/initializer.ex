@@ -3,8 +3,11 @@ defmodule CouchGears.Initializer do
   This module is responsible for starting a CouchGears framework
   inside a particular Couch DB note as a independent daemon.
 
+  A `CouchGears.Initializer` starts its own base supervisor. Each application (actually also a supervisor)
+  becomes a part of base supervisor.
+
   A framework configuration designed as easy as possible. It follows
-  a Couch DB extension rules.
+  a Couch DB extension approach.
 
   ## Configurtion
 
@@ -31,14 +34,22 @@ defmodule CouchGears.Initializer do
 
   """
 
+  use Supervisor.Behaviour
+
+
   @root_path Path.expand      "../../..", __FILE__
   @httpd_db_handlers          "Elixir-CouchGears-Mochiweb-Handler"
   @gears_request_prefix       "_gears"
 
   @doc """
-  Starts CouchGears as a daemon
+  Starts the supervisor
   """
   def start_link(opts) do
+    :supervisor.start_link({ :local, __MODULE__ }, __MODULE__, opts)
+  end
+
+  @doc false
+  def init(opts) do
     configure_gears(opts)
 
     # Adds a Elixir deps to the code path
@@ -54,9 +65,26 @@ defmodule CouchGears.Initializer do
     # Setups gears environment
     start_gears_dependencies
     setup_httpd_handlers
-    initialize_gears
 
-    {:ok, self()}
+    # Starts applications
+    apps = Enum.map initialize_gears, fn(opts) ->
+      supervisor(__MODULE__, [opts], [id: opts[:app_name], function: :start_child, restart: :permanent])
+    end
+
+    supervise(apps, [strategy: :one_for_one])
+  end
+
+  @doc """
+  Starts a particular application
+  """
+  def start_child(opts // []) do
+    File.cd(opts[:app_path])
+    Code.load_file Path.join([opts[:app_path], "config", "application.ex"])
+    app = Module.concat([Mix.Utils.camelize(opts[:app_name]) <> "Application"])
+
+    CouchGears.gears(CouchGears.gears ++ [app])
+
+    app.start_link
   end
 
 
@@ -75,25 +103,14 @@ defmodule CouchGears.Initializer do
   end
 
   defp initialize_gears do
-    apps = Enum.map Path.wildcard(CouchGears.root_path <> "/apps/*"), fn(app_path) ->
-      app_name = List.last(Path.split(app_path))
-
-      # Starts gear as an OTP application
+    Enum.map Path.wildcard(CouchGears.root_path <> "/apps/*"), fn(app_path) ->
       Code.append_path Path.join([app_path, "ebin"])
-      :application.start binary_to_atom(app_name)
-
-      # Starts gear as an Dynamo application
-      File.cd(app_path)
-      Code.load_file Path.join([app_path, "config", "application.ex"])
-      app = Module.concat([Mix.Utils.camelize(app_name) <> "Application"])
-      app.start_link
-      app
+      [app_name: List.last(Path.split(app_path)), app_path: app_path]
     end
-
-    CouchGears.gears(apps)
   end
 
   defp configure_gears(opts) do
+    CouchGears.gears([])
     CouchGears.env(:couch_util.get_value(:env, opts, "dev"))
     CouchGears.root_path(@root_path)
   end
