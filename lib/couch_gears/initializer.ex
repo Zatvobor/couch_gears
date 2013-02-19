@@ -71,7 +71,11 @@ defmodule CouchGears.Initializer do
       supervisor(__MODULE__, [opts], [id: opts[:app_name], function: :start_child, restart: :permanent])
     end
 
-    supervise(apps, [strategy: :one_for_one])
+    spec = supervise(apps, [strategy: :one_for_one])
+
+    CouchGears.Logger.info("CouchGears has started")
+
+    spec
   end
 
   @doc """
