@@ -6,8 +6,6 @@ defmodule CouchGears.Records do
   Code.prepend_path("include")
 
 
-  @doc """
-  A mapping for `#httpd` record which represents a HTTP request environment
-  """
   defrecord Httpd, Record.extract(:httpd, from: "couch_db.hrl")
+  defrecord FullDocInfo, Record.extract(:full_doc_info, from: "couch_db.hrl")
 end

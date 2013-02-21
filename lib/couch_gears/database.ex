@@ -23,6 +23,7 @@ defmodule CouchGears.Database do
   """
 
   alias CouchGears.Database.Helpers, as: Helpers
+  alias CouchGears.Records, as: Records
 
 
   Code.prepend_path("include")
@@ -174,6 +175,21 @@ defmodule CouchGears.Database do
   def update(db_name, raw_doc) when is_list(raw_doc), do: update(raw_doc, open(db_name))
 
   def update(db_name, hash_doc) when is_record(hash_doc, HashDict), do: update(hash_doc, open(db_name))
+
+  @doc """
+  Enumerates through particular `db` and pass arguments such a `FullDocInfo` record,
+  something like `reds` and execution accumulator as a second argument to `callback` function.
+  Check a `couch_db:enum_docs/4` function usage example for more information.
+  """
+  def enum_docs(db, callback, opts) when is_record(db, CouchGears.Database) and is_function(callback, 3) do
+    function = fn(raw_full_doc_info, reds, acc) ->
+      callback.(Records.FullDocInfo.new(raw_full_doc_info), reds, acc)
+    end
+    :couch_db.enum_docs(db.raw_db, function, [], opts || [])
+  end
+
+  def enum_docs(db_name, callback, opts), do: enum_docs(open(db_name), callback, opts)
+  def enum_docs(db_name, callback), do: enum_docs(db_name, callback, [])
 
 
 

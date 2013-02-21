@@ -50,4 +50,13 @@ defmodule DatabaseModuleAcceptance do
     assert DB.find_with_rev(@fixture_db, @doc_x, rev)["_rev"] == rev
   end
 
+  # test "tries to enum through undefined db" do
+  #   callback = fn(_a,_b,acc) -> { :ok, acc } end
+  #   assert DB.enum_docs("undefined", callback) == { :ok, 0, [] }
+  # end
+
+  test "enums through db" do
+    callback = fn(_a,_b,acc) -> { :ok, acc ++ [:gotcha] } end
+    assert DB.enum_docs(@fixture_db, callback) == { :ok, 1, [:gotcha] }
+  end
 end
