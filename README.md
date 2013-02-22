@@ -8,6 +8,7 @@ In short, `Couch Gears` is a spatial extension for [Apache CouchDB](https://gith
 
 ### Status: under active development and  scoping (YOU're welcome!)
 ### Current version: `0.6.dev`
+### Future User Faicing Features: https://gist.github.com/AZatvornitskiy/5013360
 
 
 Installation Quickstart
