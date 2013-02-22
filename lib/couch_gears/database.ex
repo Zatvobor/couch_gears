@@ -96,17 +96,35 @@ defmodule CouchGears.Database do
   def find_raw(_doc_id, :no_db_file), do: :no_db_file
 
   def find_raw(doc_id, db) when is_record(db, CouchGears.Database) do
-    { _, document } = do_find(doc_id, db)
-    document
+    find_raw(doc_id, [], db)
   end
 
-  def find_raw(db_name, doc_id), do: find_raw(doc_id, open(db_name))
+  def find_raw(db_name, doc_id), do: find_raw(doc_id, [], open(db_name))
+
+  @doc false
+  def find_raw(_doc_id, _opts, :no_db_file), do: :no_db_file
+
+  def find_raw(doc_id, opts, db) when is_record(db, CouchGears.Database) do
+    { _, raw_doc } = do_find(doc_id, db)
+    do_filter(raw_doc, opts)
+  end
+
+  def find_raw(db_name, doc_id, opts), do: find_raw(doc_id, opts, open(db_name))
 
   @doc """
   Returns a `document` as a `HashDict` or either `:no_db_file`/`:missing` atom.
   """
-  def find(doc_id, db) do
-    do_doc find_raw(doc_id, db)
+  def find(doc_id, db) when is_record(db, CouchGears.Database), do: find(doc_id, [], db)
+
+  def find(doc_id, db_name), do: find(doc_id, db_name, [])
+
+  @doc false
+  def find(doc_id, opts, db) when is_record(db, CouchGears.Database) do
+    do_doc find_raw(doc_id, opts, db)
+  end
+
+  def find(doc_id, db_name, opts) do
+    do_doc find_raw(doc_id, db_name, opts)
   end
 
   @doc """
@@ -210,6 +228,12 @@ defmodule CouchGears.Database do
 
   defp do_doc(raw_doc) when is_list(raw_doc) do
     HashDict.new(raw_doc, Helpers.from_list_to_hash_dict_transform)
+  end
+
+  defp do_filter(missing, _opts) when is_atom(missing), do: missing
+
+  defp do_filter(raw_doc, opts) do
+    raw_doc
   end
 
   defp make_rev(rev), do: [:couch_doc.parse_rev(rev)]
