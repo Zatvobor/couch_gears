@@ -106,13 +106,7 @@ defmodule CouchGears.Database do
   Returns a `document` as a `HashDict` or either `:no_db_file`/`:missing` atom.
   """
   def find(doc_id, db) do
-    doc = find_raw(doc_id, db)
-
-    unless doc == :no_db_file || doc == :missing do
-      doc = HashDict.new(doc, Helpers.from_list_to_hash_dict_transform)
-    end
-
-    doc
+    do_doc find_raw(doc_id, db)
   end
 
   @doc """
@@ -210,6 +204,12 @@ defmodule CouchGears.Database do
       _ ->
         {:not_found, :missing}
     end
+  end
+
+  defp do_doc(missing) when is_atom(missing), do: missing
+
+  defp do_doc(raw_doc) when is_list(raw_doc) do
+    HashDict.new(raw_doc, Helpers.from_list_to_hash_dict_transform)
   end
 
   defp make_rev(rev), do: [:couch_doc.parse_rev(rev)]
