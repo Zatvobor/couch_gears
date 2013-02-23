@@ -65,6 +65,20 @@ defmodule DatabaseInstanceAcceptance do
     assert doc["_id"] == @doc_x
   end
 
+  test "creates a document w/ specific id" do
+    rev = DB.open(@fixture_db).create_doc([{"_id", "strict"},{"boolean", false}])
+    doc = DB.open(@fixture_db).find_raw("strict")
+
+    assert Enum.count(doc) == 3
+    assert doc["_id"] == "strict"
+    assert doc["_rev"] == rev
+  end
+
+  test "creates a document w/ out id" do
+    rev = DB.open(@fixture_db).create_doc([{"boolean", false}])
+    {1, _} = :couch_doc.parse_rev(rev)
+  end
+
   test "updates a document as a hash dict" do
     db = DB.open(@fixture_db)
     doc = db.find(@doc_x)

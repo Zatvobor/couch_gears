@@ -173,7 +173,7 @@ defmodule CouchGears.Database do
   def find_with_rev(db_name, doc_id, rev), do: find_with_rev(doc_id, rev, open(db_name))
 
   @doc """
-  Creates a `document` and return a `document` or either `:conflict`/`:no_db_file` atom.
+  Creates a `document` and return the `rev` as string or either `:conflict`/`:no_db_file` atom.
   """
   def create_doc(_doc, :no_db_file), do: :no_db_file
 
@@ -193,7 +193,6 @@ defmodule CouchGears.Database do
   # it'd be a much better (inside)
   def create_doc(raw_doc, db) when is_list(raw_doc) and is_record(db, CouchGears.Database) do
     update(raw_doc, db)
-    find_raw(raw_doc, db)
   end
 
   @doc """
@@ -204,7 +203,7 @@ defmodule CouchGears.Database do
   def update(raw_doc, database(raw_db: raw_db)) when is_list(raw_doc) do
     json_doc   = :couch_doc.from_json_obj({raw_doc})
     {:ok, rev} = :couch_db.update_doc(raw_db, json_doc, [])
-    rev
+    :couch_doc.rev_to_str(rev)
   end
 
   def update(hash_doc, db) when is_record(hash_doc, HashDict) and is_record(db, CouchGears.Database) do
