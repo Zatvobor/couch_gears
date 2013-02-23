@@ -7,7 +7,7 @@ In short, `Couch Gears` is a spatial extension for [Apache CouchDB](https://gith
 
 
 ### Status: under active development and  scoping (YOU're welcome!)
-### Current version: `0.6.dev`
+### Current version: `0.6`
 ### Future Roadmap: https://gist.github.com/AZatvornitskiy/5013360
 
 
@@ -33,7 +33,7 @@ configure a Couch DB `local.ini` config:
 create your first `hello_world` gear application:
 
     # exports local elixir dependency to the PATH
-    export PATH=$PATH:deps/elixir/bin 
+    export PATH=$PATH:deps/elixir/bin
     mix gear
 
     # or use `elixir` commands directly
