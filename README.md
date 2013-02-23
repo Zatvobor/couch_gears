@@ -50,7 +50,8 @@ That is it:
     => {"ok":"Hello World"}
 
 
-# Walk-through `hello_world` application
+Walk-through `hello_world` application
+--------------------------------------
 
 Check the origin [Dynamo Walk-through](https://github.com/elixir-lang/dynamo#walk-through) documentation.
 
@@ -120,9 +121,6 @@ defmodule ApplicationRouter do
 end
 
 ```
-
-Have an useful practice! )
-
 
 License
 -------
