@@ -8,7 +8,7 @@ In short, `Couch Gears` is a spatial extension for [Apache CouchDB](https://gith
 
 ### Status: under active development and  scoping (YOU're welcome!)
 ### Current version: `0.6.dev`
-### Future User Faicing Features: https://gist.github.com/AZatvornitskiy/5013360
+### Future Roadmap: https://gist.github.com/AZatvornitskiy/5013360
 
 
 Installation Quickstart
@@ -32,8 +32,8 @@ configure a Couch DB `local.ini` config:
 
 create your first `hello_world` gear application:
 
-    # export local elixir dependency to the PATH
-    export PATH=$PATH:deps/elixir/bin
+    # exports local elixir dependency to the PATH
+    export PATH=$PATH:deps/elixir/bin 
     mix gear
 
     # or use `elixir` commands directly
@@ -49,6 +49,77 @@ That is it:
     curl -H"Content-Type: application/json" http://127.0.0.1:5984/db/_gears
     => {"ok":"Hello World"}
 
+
+# Walk-through `hello_world` application
+
+Check the origin [Dynamo Walk-through](https://github.com/elixir-lang/dynamo#walk-through) documentation.
+
+`HelloWorldApplication` module defined at `apps/hello_world/config/application.ex` which is your specific `CouchGears.App` initializer.
+
+```elixir
+defmodule HelloWorldApplication do
+  use CouchGears.App
+
+  config :gear,
+    # application handlers, by default `:undefined`
+    handlers: [
+    #   global: true,
+    #   # :all
+      global: true,
+      dbs: [:db, :test_suite_db] # :all
+    ] # :undefined
+    # known_db: :all
+
+
+  config :dynamo,
+  # Compiles modules as they are needed
+  # compile_on_demand: true,
+  # Reload modules after they are changed
+  # reload_modules: true,
+
+  # The environment this Dynamo runs on
+  env: CouchGears.env,
+
+  # The endpoint to dispatch requests too
+  endpoint: ApplicationRouter
+
+
+  # The environment specific options
+  environment "dev" do
+    config :dynamo, compile_on_demand: true, reload_modules: true
+  end
+
+  environment %r(prod|test) do
+    config :dynamo, compile_on_demand: true, reload_modules: false
+  end
+end
+
+```
+
+`ApplicationRouter` defined at `apps/hello_world/web/routes/application_router.ex`
+
+```elixir
+defmodule ApplicationRouter do
+  use CouchGears.Router
+
+  # Application level filters
+
+  # Sets CouchGears version info as a 'Server' response header.
+  # filter CouchGears.Filters.ServerVersion
+
+  # Sets 'Content-Type: application/json' response header.
+  filter CouchGears.Filters.ResponseTypeJSON
+
+  # Accepts only 'Content-Type: application/json' request. Otherwise, returns a '400 Bad Request' response
+  # filter CouchGears.Filters.OnlyRequestTypeJSON
+
+
+  get "/" do
+    conn.resp_body([{:ok, "Hello World"}], :json)
+  end
+end
+
+```
 
 Have an useful practice! )
 
