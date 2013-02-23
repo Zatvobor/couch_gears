@@ -38,6 +38,26 @@ defmodule DatabaseInstanceAcceptance do
     assert doc["_id"] == @doc_x
   end
 
+  test "returns a filtered document (except: ['number', 'string'])" do
+    { doc_id, doc_body } = { "except", [{"_id","except"}, {"number",1}, {"string","s"}, {"boolean",true}] }
+    create_fixture doc_body
+
+    doc = DB.open(@fixture_db).find_raw(doc_id, [except: ["number", "string"]])
+
+    assert Enum.count(doc) == 3
+    assert doc["_id"]      == doc_id
+    assert doc["boolean"]
+  end
+
+  test "returns a filtered document (only: ['number', 'string'])" do
+    { doc_id, doc_body }   = { "only", [{"_id","only"}, {"number",1}, {"string","s"}, {"boolean",true}] }
+    create_fixture doc_body
+
+    doc = DB.open(@fixture_db).find_raw(doc_id, [only: ["number", "string"]])
+    assert doc == [{"number", 1}, {"string", "s"}]
+  end
+
+
   test "returns a document as a hash dict" do
     db = DB.open(@fixture_db)
     doc = db.find(@doc_x)

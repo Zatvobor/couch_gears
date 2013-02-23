@@ -40,6 +40,21 @@ defmodule DatabaseModuleAcceptance do
     refute prev_rev == new_rev
   end
 
+  test "returns a filtered document (except: ['number'])" do
+    doc = DB.find(@fixture_db, @doc_x, [except: ["number"]])
+
+    assert doc.size == 2
+    assert doc["_id"] == @doc_x
+  end
+
+  test "returns a filtered document (only: ['_id'])" do
+    doc = DB.find(@fixture_db, @doc_x, [only: ["_id"]])
+
+    assert doc.size   == 1
+    assert doc["_id"] == @doc_x
+  end
+
+
   test "returns a document with rev" do
     doc = DB.find(@fixture_db, @doc_x)
     rev = doc["_rev"]

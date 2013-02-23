@@ -101,7 +101,25 @@ defmodule CouchGears.Database do
 
   def find_raw(db_name, doc_id), do: find_raw(doc_id, [], open(db_name))
 
-  @doc false
+  @doc """
+  Returns a `document` as a raw `list` or either `:no_db_file`/`:missing` atom.
+  An `opts` is a convenience for filtering
+
+  ## Options
+
+  * `except:` - The list of fields which should be cut from a document body
+
+  * `only:`   - The strict list of fields which should have a returned document
+
+  ## Examples
+
+    Database.find_raw("db", "doc_id", [only: ["_id"]])
+    # => [{"_id", "doc_id"}]
+
+    Database.find_raw("db", "doc_id", [except: ["_id"]])
+    # => [{"_rev", "1-41f7a51b6f7002e9a41ad4fc466838e4"}]
+
+  """
   def find_raw(_doc_id, _opts, :no_db_file), do: :no_db_file
 
   def find_raw(doc_id, opts, db) when is_record(db, CouchGears.Database) do
@@ -118,7 +136,17 @@ defmodule CouchGears.Database do
 
   def find(doc_id, db_name), do: find(doc_id, db_name, [])
 
-  @doc false
+  @doc """
+  Returns a `document` as a raw `list` or either `:no_db_file`/`:missing` atom.
+  An `opts` is a convenience for filtering
+
+  ## Options
+
+  * `except:` - The list of fields which should be cut from a document body
+
+  * `only:`   - The strict list of fields which should have a returned document
+
+  """
   def find(doc_id, opts, db) when is_record(db, CouchGears.Database) do
     do_doc find_raw(doc_id, opts, db)
   end
@@ -231,9 +259,16 @@ defmodule CouchGears.Database do
   end
 
   defp do_filter(missing, _opts) when is_atom(missing), do: missing
+  defp do_filter(raw_doc, []), do: raw_doc
 
   defp do_filter(raw_doc, opts) do
-    raw_doc
+    fun = case opts do
+      [except: fields] ->
+        fn({k,_}) -> !List.member?(fields, k) end
+      [only: fields] ->
+        fn({k,_}) -> List.member?(fields, k) end
+    end
+    Enum.filter(raw_doc, fun)
   end
 
   defp make_rev(rev), do: [:couch_doc.parse_rev(rev)]
