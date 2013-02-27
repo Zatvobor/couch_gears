@@ -7,7 +7,7 @@ defmodule CouchGears do
   @doc """
   Gets current version.
   """
-  def version, do: "0.5.0.dev"
+  def version, do: "0.7.dev"
 
   @doc """
   Gets runtime environment.
