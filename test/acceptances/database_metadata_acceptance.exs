@@ -7,14 +7,29 @@ defmodule Database.MetadataAcceptance do
   alias CouchGears.Records, as: Records
 
 
-  test "tries to_db for misisng db" do
+  test "tries get a misisng Db record" do
     db = to_db("missing")
     assert db == :no_db_file
   end
 
-  test "returns a db record" do
+  test "returns a Db record" do
     db = to_db("fixture")
     assert is_record(db, Records.Db)
+  end
+
+  test "tries get a Doc record in case of missing db" do
+    doc = to_doc("missing", "missing")
+    assert doc == :no_db_file
+  end
+
+  test "tries get a missing Doc record" do
+    doc = to_doc("fixture", "missing")
+    assert doc == :missing
+  end
+
+  test "returns a Doc record" do
+    doc = to_doc("fixture", "x")
+    assert is_record(doc, Records.Doc)
   end
 
 end

@@ -3,15 +3,24 @@ defmodule CouchGears.Database.Metadata do
   This module provides ability to get a `CouchGears.Records` related entities.
   """
 
-
   alias CouchGears.Records, as: Records
+
 
   @doc false
   def to_db(name) do
-    {_, db} = :couch_db.open_int(name, [])
-    unless db ==  :no_db_file do
-      db = Records.Db.new(db)
-    end
-    db
+    {_, r} = :couch_db.open(name, [])
+    unless r == :no_db_file, do: r = Records.Db.new(r)
+    r
   end
+
+  @doc false
+  def to_doc(db_name, id) do
+    {_, r} = :couch_db.open(db_name, [])
+    unless r == :no_db_file do
+      {_, r} = :couch_db.open_doc(r, id, [])
+      unless r == :missing, do: r = Records.Doc.new(r)
+    end
+    r
+  end
+
 end
