@@ -23,4 +23,13 @@ defmodule CouchGears.Database.Metadata do
     r
   end
 
+  @doc false
+  def to_doc_info(db_name, id) do
+    {_, r} = :couch_db.open(db_name, [])
+    unless r == :no_db_file do
+      r = :couch_db.get_doc_info(r, id)
+      unless r == :not_found, do: r = Records.DocInfo.new(r)
+    end
+    r
+  end
 end

@@ -32,4 +32,19 @@ defmodule Database.MetadataAcceptance do
     assert is_record(doc, Records.Doc)
   end
 
+  test "tries get a DocInfo record in case of missing db" do
+    doc = to_doc_info("missing", "missing")
+    assert doc == :no_db_file
+  end
+
+  test "tries get a missing DocInfo record" do
+    doc = to_doc_info("fixture", "missing")
+    assert doc == :not_found
+  end
+
+  test "returns a DocInfo record" do
+    doc = to_doc_info("fixture", "x")
+    assert is_record(doc, Records.DocInfo)
+  end
+
 end
