@@ -1,5 +1,5 @@
 [ "cowboy": {:git,"https://github.com/extend/cowboy.git","1f59607b7adcff49d2407f53eead75deb4f8b239",[]},
-  "dynamo": {:git,"https://github.com/datahogs/dynamo.git","3740d5ab91404f96feaf855cb799ab6920632369",[]},
+  "dynamo": {:git,"https://github.com/datahogs/dynamo.git","e6c2831e874ea9cde1c5366671545f80422cebbe",[]},
   "ejson": {:git,"https://github.com/davisp/ejson.git","8503461aec0e7f39ed9896be816b5f5e8caa1bf8",[]},
   "mimetypes": {:git,"https://github.com/spawngrid/mimetypes.git","0800544bbb684616651a2a1b30aa260132d17d37",[]},
   "mochiweb": {:git,"https://github.com/mochi/mochiweb.git","edb954a15c4343d56345776e3f5c69e201714153",[]},

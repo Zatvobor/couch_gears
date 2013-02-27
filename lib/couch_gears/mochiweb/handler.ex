@@ -42,7 +42,7 @@ defmodule CouchGears.Mochiweb.Handler do
   def handle_db_gears_req(httpd, db) do
     { db_name, httpd } = { db_name(db), Record.Httpd.new(httpd) }
 
-    app = Enum.find CouchGears.gears, fn(app) ->
+    dynamo = Enum.find CouchGears.gears, fn(app) ->
       # seems not as good as should be!
       app_config = CouchGears.App.normalize_config(app)
       case app_config[:handlers][:dbs] do
@@ -51,7 +51,7 @@ defmodule CouchGears.Mochiweb.Handler do
       end
     end
 
-    call(app, httpd, db_name)
+    call(dynamo, httpd, db_name)
   end
 
   @doc """
@@ -73,13 +73,13 @@ defmodule CouchGears.Mochiweb.Handler do
   end
 
   def handle_global_gears_req(Record.Httpd[path_parts: ["_gears" | _path_parts]] = httpd) do
-    app = Enum.find CouchGears.gears, fn(app) ->
+    dynamo = Enum.find CouchGears.gears, fn(app) ->
       # seems not as good as should be!
       app_config = CouchGears.App.normalize_config(app)
       app_config[:handlers][:global]
     end
 
-    call(app, httpd, :_global)
+    call(dynamo, httpd, :_global)
   end
 
   def handle_global_gears_req(httpd), do: handle_global_gears_req(Record.Httpd.new(httpd))

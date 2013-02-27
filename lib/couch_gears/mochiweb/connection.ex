@@ -5,7 +5,7 @@ defmodule CouchGears.Mochiweb.Connection do
 
 
   @doc false
-  def new(app, httpd, db_name) do
+  def new(dynamo, httpd, db_name) do
     database = to_binary(db_name)
 
     unless db_name == :under_test || db_name == :_global do
@@ -13,19 +13,18 @@ defmodule CouchGears.Mochiweb.Connection do
     end
 
     connection(
-      app: app,
-      httpd: httpd,
-      database: database,
-
-      path_info_segments: path_info_segments(httpd),
-      method: original_method(httpd),
-
-      params: query_string(httpd),
+      main:       dynamo,
+      httpd:      httpd,
+      database:   database,
+      method:     original_method(httpd),
+      params:     query_string(httpd),
 
       req_headers: req_headers(httpd),
       req_cookies: req_cookies(httpd),
 
-      before_send: Dynamo.Connection.default_before_send
+      before_send: Dynamo.Connection.default_before_send,
+
+      path_info_segments: path_info_segments(httpd)
     )
   end
 
@@ -113,7 +112,7 @@ defmodule CouchGears.Mochiweb.Connection do
   # Response API
 
   @doc false
-  def already_sent?(connection(app: :under_test, state: state)) do
+  def already_sent?(connection(main: :under_test, state: state)) do
     state == :set
   end
 
