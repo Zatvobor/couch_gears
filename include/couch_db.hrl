@@ -172,7 +172,7 @@
     fd,
     updater_fd,
     fd_ref_counter,
-    % header = #db_header{},
+    header = nil,
     committed_update_seq,
     fulldocinfo_by_id_btree,
     docinfo_by_seq_btree,
@@ -292,9 +292,9 @@
 -record(btree, {
     fd,
     root,
-    extract_kv = fun({_Key, _Value} = KV) -> KV end,
-    assemble_kv = fun(Key, Value) -> {Key, Value} end,
-    less = fun(A, B) -> A < B end,
+    extract_kv = nil, % fun({_Key, _Value} = KV) -> KV end,
+    assemble_kv = nil, %fun(Key, Value) -> {Key, Value} end,
+    less = nil, % fun(A, B) -> A < B end,
     reduce = nil,
     compression = ?DEFAULT_COMPRESSION
 }).

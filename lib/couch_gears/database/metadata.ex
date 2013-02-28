@@ -10,7 +10,17 @@ defmodule CouchGears.Database.Metadata do
   def to_db(name) do
     fun = fn([_,_]) ->
       {_, r} = :couch_db.open(name, [])
-      unless r == :no_db_file, do: r = Records.Db.new(r)
+      unless r == :no_db_file do
+        r = Records.Db.new(r)
+
+        r = r.update(header: Records.DbHeader.new(r.header))
+
+        r = r.update(fulldocinfo_by_id_btree: Records.BTree.new(r.fulldocinfo_by_id_btree))
+        r = r.update(docinfo_by_seq_btree:    Records.BTree.new(r.docinfo_by_seq_btree))
+        r = r.update(local_docs_btree:        Records.BTree.new(r.local_docs_btree))
+
+        r
+      end
       r
     end
     touch_db(name, nil, fun)

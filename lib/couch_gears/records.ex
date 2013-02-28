@@ -9,6 +9,8 @@ defmodule CouchGears.Records do
   defrecord Httpd,        Record.extract(:httpd, from: "couch_db.hrl")
 
   defrecord Db,           Record.extract(:db, from: "couch_db.hrl")
+  defrecord DbHeader,     Record.extract(:db_header, from: "couch_db.hrl")
+  defrecord BTree,        Record.extract(:btree, from: "couch_db.hrl")
 
   defrecord Doc,          Record.extract(:doc, from: "couch_db.hrl")
   defrecord DocInfo,      Record.extract(:doc_info, from: "couch_db.hrl")
