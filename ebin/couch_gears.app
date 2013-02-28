@@ -24,6 +24,7 @@
                         'Elixir-CouchGears-Records-DocInfo',
                         'Elixir-CouchGears-Records-FullDocInfo',
                         'Elixir-CouchGears-Records-Httpd',
+                        'Elixir-CouchGears-Records-RevInfo',
                         'Elixir-CouchGears-Records',
                         'Elixir-CouchGears-Router','Elixir-CouchGears',
                         'Elixir-Mix-Tasks-Gear']},

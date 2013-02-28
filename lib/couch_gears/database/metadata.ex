@@ -8,7 +8,7 @@ defmodule CouchGears.Database.Metadata do
 
   @doc false
   def to_db(name) do
-    fun = fn([r, _]) ->
+    fun = fn([_,_]) ->
       {_, r} = :couch_db.open(name, [])
       unless r == :no_db_file, do: r = Records.Db.new(r)
       r
@@ -20,7 +20,10 @@ defmodule CouchGears.Database.Metadata do
   def to_doc(db_name, id) do
     fun = fn([r, id]) ->
       {_, r} = :couch_db.open_doc(r, id, [])
-      unless r == :missing, do: r = Records.Doc.new(r)
+      unless r == :missing do
+        r = Records.Doc.new(r)
+        r.update(atts: Enum.map r.atts, fn(i) -> Records.Att.new(i) end)
+      end
       r
     end
     touch_db(db_name, id, fun)
@@ -29,9 +32,13 @@ defmodule CouchGears.Database.Metadata do
   @doc false
   def to_doc_info(db_name, id) do
     fun = fn([r, id]) ->
-      r = :couch_db.get_doc_info(r, id)
-      unless r == :not_found, do: r = Records.DocInfo.new(r)
-      r
+      case :couch_db.get_doc_info(r, id) do
+        { :ok, r } ->
+          r = Records.DocInfo.new(r)
+          r.update(revs: Enum.map r.revs, fn(i) -> Records.RevInfo.new(i) end)
+        missing ->
+          missing
+      end
     end
     touch_db(db_name, id, fun)
   end

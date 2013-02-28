@@ -14,5 +14,6 @@ defmodule CouchGears.Records do
   defrecord DocInfo,      Record.extract(:doc_info, from: "couch_db.hrl")
   defrecord FullDocInfo,  Record.extract(:full_doc_info, from: "couch_db.hrl")
 
-  defrecord Att,         Record.extract(:att, from: "couch_db.hrl")
+  defrecord Att,          Record.extract(:att, from: "couch_db.hrl")
+  defrecord RevInfo,      Record.extract(:rev_info, from: "couch_db.hrl")
 end
