@@ -161,7 +161,7 @@ defmodule CouchGears.Database do
   def find_with_rev(_doc_id, _rev, :no_db_file), do: :no_db_file
 
   def find_with_rev(doc_id, rev, database(raw_db: raw_db)) do
-    case :couch_db.open_doc_revs(raw_db, doc_id, make_rev(rev), []) do
+    case :couch_db.open_doc_revs(raw_db, doc_id, [make_rev(rev)], []) do
       {:ok, [{:ok, doc}]} ->
         {body} = :couch_doc.to_json_obj(doc, [])
         HashDict.new(body, Helpers.from_list_to_hash_dict_transform)
@@ -270,5 +270,5 @@ defmodule CouchGears.Database do
     Enum.filter(raw_doc, fun)
   end
 
-  defp make_rev(rev), do: [:couch_doc.parse_rev(rev)]
+  defp make_rev(rev), do: :couch_doc.parse_rev(rev)
 end
