@@ -1,12 +1,15 @@
 defmodule CouchGears.Database.Metadata do
   @moduledoc """
-  This module provides ability to get a `CouchGears.Records` related entities.
+  This module provides ability to get a CouchDB related records for particular `db` and `doc_id` accordingly.
+
   """
 
   alias CouchGears.Records, as: Records
 
 
-  @doc false
+  @doc """
+  Returns a `CouchGears.Records.Db` record or `:no_db_file` instead.
+  """
   def to_db(name) do
     fun = fn([_,_]) ->
       {_, r} = :couch_db.open(name, [])
@@ -26,7 +29,9 @@ defmodule CouchGears.Database.Metadata do
     touch_db(name, nil, fun)
   end
 
-  @doc false
+  @doc """
+  Returns a `CouchGears.Records.Doc` record or either `:no_db_file` / `:missing`.
+  """
   def to_doc(db_name, id) do
     fun = fn([r, id]) ->
       {_, r} = :couch_db.open_doc(r, id, [])
@@ -39,7 +44,9 @@ defmodule CouchGears.Database.Metadata do
     touch_db(db_name, id, fun)
   end
 
-  @doc false
+  @doc """
+  Returns a `CouchGears.Records.DocInfo` record or either `:no_db_file` / `:missing`.
+  """
   def to_doc_info(db_name, id) do
     fun = fn([r, id]) ->
       case :couch_db.get_doc_info(r, id) do
