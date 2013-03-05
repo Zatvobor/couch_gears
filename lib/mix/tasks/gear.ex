@@ -144,30 +144,26 @@ defmodule Mix.Tasks.Gear do
   Code.require_file "../../test_helper.exs", __FILE__
 
   defmodule ApplicationRouterTest do
+
     use ExUnit.Case, async: true
     use CouchGears.Case
 
-    Code.require_file "app/routers/application_router.ex"
+    Code.require_file "web/routers/application_router.ex"
     @app ApplicationRouter
 
-
-    test "returns not_found" do
-      # assert get(path: "u/n/k/n/o/w/n").status == 404
-
+    test "returns a 404" do
       assert_raise Dynamo.NotFoundError, fn ->
-        get(path: "u/n/k/n/o/w/n")
+        assert get(path: "u/n/k/n/o/w/n").status == 404
       end
-
     end
 
-    test "returns body as json" do
+    test "returns a 200 and body w/ json" do
       conn = get(path: "/", headers: [{"Content-Type", "application/json"}])
 
       assert conn.status == 200
       assert conn.resp_headers("Content-Type") == "application/json"
       assert conn.resp_body == "{\\"ok\\":\\"Hello World\\"}"
     end
-
   end
   """
 end
