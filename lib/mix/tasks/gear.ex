@@ -69,7 +69,7 @@ defmodule Mix.Tasks.Gear do
     @doc false
     def project do
       [ app: :<%= @name %>,
-        version: "<%= @version %>",
+        version: "git",
         compilers: [:elixir, :app],
         deps_path: "../../../couch_gears/deps",
         deps: deps ]
