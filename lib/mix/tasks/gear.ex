@@ -110,7 +110,16 @@ defmodule Mix.Tasks.Gear do
     use CouchGears.App
 
     config :gear,
-      handlers: [ dbs: all ]
+      handlers: [
+        # Handles request which doesn't belong to any kind of `db` (`global` requests)
+        # global: true,
+
+        # Sets a particular `db` names which belongs to application
+        # dbs: [:a, :b]
+
+        # Sets a `dbs: :all` for handling requests for all available dbs
+        dbs: :all
+      ]
 
     config :dynamo,
       # The environment this Dynamo runs on
