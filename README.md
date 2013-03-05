@@ -62,14 +62,16 @@ defmodule HelloWorldApplication do
   use CouchGears.App
 
   config :gear,
-    # application handlers, by default `:undefined`
     handlers: [
-    #   global: true,
-    #   # :all
-      global: true,
-      dbs: [:db, :test_suite_db] # :all
-    ] # :undefined
-    # known_db: :all
+      # Handles requests which doesn't belong to any kind of `db`
+      # global: true,
+
+      # Sets a particular `db` names which belongs to application
+      # dbs: [:a, :b]
+
+      # Sets a `dbs: :all` for handling requests for all available dbs
+      dbs: :all
+    ]
 
 
   config :dynamo,
