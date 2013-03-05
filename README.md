@@ -22,8 +22,8 @@ After downloading, type:
 
 After passed tests, put in `couch_normalizer` to `couchdb` bash:
 
-    COUCH_NORMALIZER_PA_OPTIONS="-pa /path/to/couch_normalizer/current/ebin"
-    ERL_START_OPTIONS="$ERL_OS_MON_OPTIONS -sasl errlog_type error +K true +A 4 $COUCH_NORMALIZER_PA_OPTIONS"
+    COUCH_GEARS_PA_OPTIONS="-pa /path/to/couch_gears/current/ebin"
+    ERL_START_OPTIONS="$ERL_OS_MON_OPTIONS -sasl errlog_type error +K true +A 4 $COUCH_GEARS_PA_OPTIONS"
 
 configure a Couch DB `local.ini` config:
 
