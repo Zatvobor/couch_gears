@@ -31,7 +31,7 @@ defmodule Mix.Tasks.Gear do
       [name] -> name
     end
 
-    path = File.join("apps", name)
+    path = Path.join("apps", name)
     File.mkdir_p!(path)
     File.cd!(path, fn -> do_generate(name) end)
   end
