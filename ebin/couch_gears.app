@@ -14,6 +14,7 @@
                         'Elixir-CouchGears-Filters-ServerVersion',
                         'Elixir-CouchGears-Initializer',
                         'Elixir-CouchGears-Logger',
+                        'Elixir-CouchGears-Mochiweb-BodyParser',
                         'Elixir-CouchGears-Mochiweb-Connection-Test-Httpd',
                         'Elixir-CouchGears-Mochiweb-Connection-Test',
                         'Elixir-CouchGears-Mochiweb-Connection',

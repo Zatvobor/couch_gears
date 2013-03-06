@@ -83,6 +83,18 @@ defmodule CouchGears.Mochiweb.Connection do
     Enum.map httpd.mochi_req.parse_qs, fn({k, v}) -> {list_to_atom(k), list_to_binary(v)} end
   end
 
+  # Body
+
+  @doc false
+  def raw_req_body(connection(httpd: httpd)) do
+    httpd.mochi_req.recv_body
+  end
+
+  @doc false
+  def parsed_req_body(conn) do
+    CouchGears.Mochiweb.BodyParser.parse(conn)
+  end
+
   # Headers
 
   @doc false

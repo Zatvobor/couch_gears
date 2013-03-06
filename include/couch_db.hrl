@@ -183,7 +183,7 @@
     validate_doc_funs = [],
     security = [],
     security_ptr = nil,
-    % user_ctx = #user_ctx{},
+    user_ctx,
     waiting_delayed_commit = nil,
     revs_limit = 1000,
     fsync_options = [],
