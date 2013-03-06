@@ -69,7 +69,6 @@ defmodule CouchGears.Initializer do
     { Mix.start, Code.load_file(@root_path <> "/mix.exs"), Mix.loadpaths }
 
     # Setups gears environment
-    start_gears_dependencies
     setup_httpd_handlers
 
     # Starts applications
@@ -105,11 +104,6 @@ defmodule CouchGears.Initializer do
     :supervisor.restart_child(__MODULE__, name)
   end
 
-
-  defp start_gears_dependencies do
-    :application.start(:elixir)
-    :application.start(:mix)
-  end
 
   defp setup_httpd_handlers do
     :couch_config.set(
