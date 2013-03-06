@@ -16,7 +16,8 @@ defmodule CouchGears.Mixfile do
   defp deps do
     [
       {:dynamo, "0.1.0.dev", github: "datahogs/dynamo"},
-      {:mochiweb, "2.4.2", github: "mochi/mochiweb"}
+      {:mochiweb, "2.4.2", github: "mochi/mochiweb"},
+      {:jsonex, github: "devinus/jsonex"}
     ]
   end
 end

@@ -1,6 +1,8 @@
 [ "cowboy": {:git,"https://github.com/extend/cowboy.git","1f59607b7adcff49d2407f53eead75deb4f8b239",[]},
   "dynamo": {:git,"https://github.com/datahogs/dynamo.git","e6c2831e874ea9cde1c5366671545f80422cebbe",[]},
   "ejson": {:git,"https://github.com/davisp/ejson.git","8503461aec0e7f39ed9896be816b5f5e8caa1bf8",[]},
+  "jsonex": {:git,"https://github.com/devinus/jsonex.git","0fb926af631df749ca0d1335e2ba5d3d1435d1d3",[]},
+  "jsx": {:git,"git://github.com/talentdeficit/jsx.git","58a9a5110f953e0b21f59f8b2dbc741a452e443f",[]},
   "mimetypes": {:git,"https://github.com/spawngrid/mimetypes.git","0800544bbb684616651a2a1b30aa260132d17d37",[]},
   "mochiweb": {:git,"https://github.com/mochi/mochiweb.git","edb954a15c4343d56345776e3f5c69e201714153",[]},
   "ranch": {:git,"https://github.com/extend/ranch.git","0364d71d69011776b2857caff7204954b1d53905",[]} ]

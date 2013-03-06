@@ -70,6 +70,10 @@ defmodule CouchGears.Initializer do
     Code.append_path(@root_path <> "/deps/dynamo/ebin")
     Code.append_path(@root_path <> "/deps/mimetypes/ebin")
 
+    # Adds a JSON deps to the code path
+    Code.append_path(@root_path <> "/deps/jsonex/ebin")
+    Code.append_path(@root_path <> "/deps/jsx/ebin")
+
     # Setups gears environment
     start_gears_dependencies
     setup_httpd_handlers
