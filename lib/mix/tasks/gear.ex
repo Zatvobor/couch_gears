@@ -111,14 +111,13 @@ defmodule Mix.Tasks.Gear do
 
     config :gear,
       handlers: [
-        handlers: [
-          # Handles request which doesn't belong to any kind of `db`
-          # global: true,
+        # Handles request which doesn't belong to any kind of `db`
+        # global: true,
 
-          # Sets a particular `db` names which application should handle
-          # dbs: [:a, :b]
-          # Sets a `dbs: :all` option which belongs to all available `dbs`
-          dbs: :all
+        # Sets a particular `db` names which application should handle
+        # dbs: [:a, :b]
+        # Sets a `dbs: :all` option which belongs to all available `dbs`
+        dbs: :all
       ]
 
     config :dynamo,
