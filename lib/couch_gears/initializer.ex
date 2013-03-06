@@ -66,13 +66,7 @@ defmodule CouchGears.Initializer do
     Code.append_path(@root_path <> "/deps/elixir/lib/mix/ebin")
     Code.append_path(@root_path <> "/deps/elixir/lib/iex/ebin")
 
-    # Adds a Dynamo deps to the code path
-    Code.append_path(@root_path <> "/deps/dynamo/ebin")
-    Code.append_path(@root_path <> "/deps/mimetypes/ebin")
-
-    # Adds a JSON deps to the code path
-    Code.append_path(@root_path <> "/deps/jsonex/ebin")
-    Code.append_path(@root_path <> "/deps/jsx/ebin")
+    { Mix.start, Code.load_file(@root_path <> "/mix.exs"), Mix.loadpaths }
 
     # Setups gears environment
     start_gears_dependencies

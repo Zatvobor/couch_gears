@@ -4,7 +4,9 @@ defmodule CouchGears.Mixfile do
   def project do
     [ app: :couch_gears,
       version: "0.7.dev",
-      deps: deps ]
+      deps: deps,
+      deps_path: expand("deps"),
+      lockfile:  expand("mix.lock") ]
   end
 
   # Configuration for the OTP application
@@ -20,4 +22,6 @@ defmodule CouchGears.Mixfile do
       {:jsonex, github: "devinus/jsonex"}
     ]
   end
+
+  defp expand(path), do: Path.expand path, Path.expand("..", __FILE__)
 end
