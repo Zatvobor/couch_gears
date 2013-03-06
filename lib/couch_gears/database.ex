@@ -186,8 +186,7 @@ defmodule CouchGears.Database do
   end
 
   def create_doc(hash_doc, db) when is_record(hash_doc, HashDict) and is_record(db, CouchGears.Database) do
-    raw_doc = create_doc(Helpers.from_hash_dict_to_list(hash_doc), db)
-    HashDict.new(raw_doc, Helpers.from_list_to_hash_dict_transform)
+    create_doc(Helpers.from_hash_dict_to_list(hash_doc), db)
   end
 
   # it'd be a much better (inside)
