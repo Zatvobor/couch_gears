@@ -42,7 +42,6 @@ defmodule Mix.Tasks.Gear do
 
     create_file ".gitignore", gitignore_text
     create_file "mix.exs",    mixfile_template(assigns)
-    create_file "mix.lock",   mixlock_text
 
     create_directory "config"
     create_file "config/application.ex", app_template(assigns)
@@ -72,17 +71,19 @@ defmodule Mix.Tasks.Gear do
         version: "git",
         compilers: [:elixir, :app],
         deps_path: "../../../couch_gears/deps",
+        lockfile:  "../../../couch_gears/mix.lock",
         deps: deps ]
     end
 
 
     defp deps do
-      [{:couch_gears, "<%= @version %>", <%= @couch_gears_source %>}]
+      [
+        {:couch_gears, "<%= @version %>", <%= @couch_gears_source %>}
+      ]
     end
   end
   """
 
-  embed_text :mixlock, from_file("../../../../mix.lock")
   embed_text :test_helper, from_file("../../../../test/test_helper.exs")
 
   embed_text :app_router, """
