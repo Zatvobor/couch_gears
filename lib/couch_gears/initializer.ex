@@ -66,7 +66,7 @@ defmodule CouchGears.Initializer do
     Code.append_path(@root_path <> "/deps/elixir/lib/mix/ebin")
     Code.append_path(@root_path <> "/deps/elixir/lib/iex/ebin")
 
-    { Mix.start, Code.load_file(@root_path <> "/mix.exs"), Mix.loadpaths }
+    { Mix.start, Code.load_file(Path.join([@root_path, "mix.exs"])), Mix.loadpaths }
 
     # Setups gears environment
     setup_httpd_handlers
@@ -88,6 +88,7 @@ defmodule CouchGears.Initializer do
   """
   def start_app(opts // []) do
     File.cd(opts[:app_path])
+
     Code.load_file Path.join([opts[:app_path], "config", "application.ex"])
     app = Module.concat([Mix.Utils.camelize(opts[:app_name]) <> "Application"])
 
@@ -116,7 +117,11 @@ defmodule CouchGears.Initializer do
 
   defp initialize_gears do
     Enum.map Path.wildcard(CouchGears.root_path <> "/apps/*"), fn(app_path) ->
-      Code.append_path Path.join([app_path, "ebin"])
+      Code.load_file(Path.join([app_path, "mix.exs"]))
+
+      Mix.Tasks.Deps.Loadpaths.run([])
+      Mix.Tasks.Loadpaths.run([])
+
       [app_name: List.last(Path.split(app_path)), app_path: app_path]
     end
   end
