@@ -9,7 +9,7 @@ defmodule Mix.Tasks.Recursive do
     unless Mix.project[:apps_path], do: raise Mix.Error, message: "no :apps_path expression"
     apps_path = [Path.expand(".")] ++ Path.wildcard(Path.join([Path.expand(Mix.project[:apps_path]), "*"]))
 
-    Enum.each(Mix.Tasks.Do.gather_commands(args), function do
+    Enum.each(gather_commands(args), function do
       [task|args] -> run(task, args, apps_path)
       [] -> raise Mix.Error, message: "no expression between commas"
     end)
@@ -34,5 +34,24 @@ defmodule Mix.Tasks.Recursive do
         exception -> Mix.shell.error(exception.message)
       end
     end
+  end
+
+  # Copied from elixir code (temporary)
+  defp gather_commands(args) do
+    gather_commands args, [], []
+  end
+
+  defp gather_commands([h|t], current, acc) when binary_part(h, byte_size(h), -1) == "," do
+    part    = binary_part(h, 0, byte_size(h) - 1)
+    current = Enum.reverse([part|current])
+    gather_commands t, [], [current|acc]
+  end
+
+  defp gather_commands([h|t], current, acc) do
+    gather_commands t, [h|current], acc
+  end
+
+  defp gather_commands([], current, acc) do
+    Enum.reverse [Enum.reverse(current)|acc]
   end
 end
