@@ -30,5 +30,5 @@
                         'Elixir-CouchGears-Records-RevInfo',
                         'Elixir-CouchGears-Records',
                         'Elixir-CouchGears-Router','Elixir-CouchGears',
-                        'Elixir-Mix-Tasks-Gear']},
+                        'Elixir-Mix-Tasks-Gear','Elixir-Mix-Tasks-Recursive']},
               {applications,[kernel,stdlib,elixir,dynamo]}]}.

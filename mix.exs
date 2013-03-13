@@ -3,6 +3,7 @@ defmodule CouchGears.Mixfile do
 
   def project do
     [ app: :couch_gears,
+      apps_path: "apps",
       version: "0.7.dev",
       deps: deps,
       deps_path: expand("deps"),
