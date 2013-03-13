@@ -1,7 +1,17 @@
 defmodule Mix.Tasks.Recursive do
-  @moduledoc false
+  @moduledoc """
+  Executes the commands separated by comma for each application under `:apps_path`.
 
-  @shortdoc "Executes the commands recursively for each application under :app_path"
+  ## Examples
+
+  The example below prints the available compilers and
+  then the list of dependencies.
+
+      mix recursive compile --list, deps
+
+  """
+
+  @shortdoc "Executes the commands recursively for each application under :apps_path"
 
   use Mix.Task
 
