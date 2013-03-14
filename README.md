@@ -125,6 +125,23 @@ end
 
 ```
 
+Convenience for managing databases and documents
+------------------------------------------------
+
+A `Database` module provides basic CRUD functions for accessing documents.
+For example:
+
+```elixir
+Database.find("db", "doc_id")
+# => [{"_id", "doc_id"}, ...]
+
+db  = CouchGears.Database.open("db")
+doc = db.find("doc_id")
+# => [{"_id", "doc_id"}, ...]
+```
+
+Check a `lib/couch_gears/database.ex` or `test/acceptances/database_instance_acceptance.exs` for more examples.
+
 License
 -------
 
