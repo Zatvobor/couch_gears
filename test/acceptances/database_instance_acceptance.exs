@@ -33,7 +33,7 @@ defmodule DatabaseInstanceAcceptance do
 
   test "returns a raw document" do
     db = DB.open(@fixture_db)
-    doc = db.find_raw(@doc_x)
+    doc = db.find(@doc_x)
 
     assert doc["_id"] == @doc_x
   end
@@ -42,7 +42,7 @@ defmodule DatabaseInstanceAcceptance do
     { doc_id, doc_body } = { "except", [{"_id","except"}, {"number",1}, {"string","s"}, {"boolean",true}] }
     create_fixture doc_body
 
-    doc = DB.open(@fixture_db).find_raw(doc_id, [except: ["number", "string"]])
+    doc = DB.open(@fixture_db).find(doc_id, [except: ["number", "string"]])
 
     assert Enum.count(doc) == 3
     assert doc["_id"]      == doc_id
@@ -53,36 +53,20 @@ defmodule DatabaseInstanceAcceptance do
     { doc_id, doc_body }   = { "only", [{"_id","only"}, {"number",1}, {"string","s"}, {"boolean",true}] }
     create_fixture doc_body
 
-    doc = DB.open(@fixture_db).find_raw(doc_id, [only: ["number", "string"]])
+    doc = DB.open(@fixture_db).find(doc_id, [only: ["number", "string"]])
     assert doc == [{"number", 1}, {"string", "s"}]
   end
 
 
-  test "returns a document as a hash dict" do
-    db = DB.open(@fixture_db)
-    doc = db.find(@doc_x)
-
-    assert doc["_id"] == @doc_x
-  end
 
   test "creates a document (as a list) w/ specific id" do
     id  = "strict_a"
     rev = DB.open(@fixture_db).create_doc([{"_id", id},{"boolean", false}])
-    doc = DB.open(@fixture_db).find_raw(id)
+    doc = DB.open(@fixture_db).find(id)
 
-    assert Enum.count(doc) == 3
-    assert doc["_id"]  == id
-    assert doc["_rev"] == rev
-  end
-
-  test "creates a document (as a hash) w/ specific id" do
-    id  = "strict_b"
-    rev = DB.open(@fixture_db).create_doc(HashDict.new([{"_id", id}, {"boolean", true}]))
-    doc = DB.open(@fixture_db).find_raw(id)
-
-    assert Enum.count(doc) == 3
-    assert doc["_id"]  == id
-    assert doc["_rev"] == rev
+    assert Dict.size(doc) == 3
+    assert doc["_id"]     == id
+    assert doc["_rev"]    == rev
   end
 
   test "creates a document w/ out id" do
@@ -90,11 +74,11 @@ defmodule DatabaseInstanceAcceptance do
     {1, _} = :couch_doc.parse_rev(rev)
   end
 
-  test "updates a document as a hash dict" do
+  test "updates a document" do
     db = DB.open(@fixture_db)
     doc = db.find(@doc_x)
 
-    doc = HashDict.put(doc, "boolean", true)
+    doc = Dict.put(doc, "boolean", true)
     prev_rev = doc["_rev"]
     new_rev  = db.update(doc)
 

@@ -13,57 +13,39 @@ defmodule DatabaseModuleAcceptance do
 
 
   test "tries to find a undefined document" do
-    assert DB.find_raw("missing_db", "missing_doc") == :no_db_file
-    assert DB.find_raw(@fixture_db, "missing_doc") == :missing
+    assert DB.find("missing_db", "missing_doc") == :no_db_file
+    assert DB.find(@fixture_db, "missing_doc") == :missing
   end
 
   test "returns a raw document" do
-    doc_x = DB.find_raw(@fixture_db, @doc_x)
+    doc_x = DB.find(@fixture_db, @doc_x)
     assert  doc_x["_id"] == @doc_x
   end
 
-  test "returns a document as a hash dict" do
-    doc_x = DB.find(@fixture_db, @doc_x)
-    assert doc_x["_id"] == @doc_x
-  end
+ test "returns a filtered document (except: ['number'])" do
+   doc = DB.find(@fixture_db, @doc_x, [except: ["number"]])
 
-  test "updates a document as a hash dict" do
-    doc = DB.find(@fixture_db, @doc_x)
-    doc = HashDict.put(doc, "boolean", false)
+   assert Dict.size(doc) == 2
+   assert doc["_id"] == @doc_x
+ end
 
-    prev_rev = doc["_rev"]
-    new_rev  = DB.update(@fixture_db, doc)
+ test "returns a filtered document (only: ['_id'])" do
+   doc = DB.find(@fixture_db, @doc_x, [only: ["_id"]])
 
-    doc = DB.find(@fixture_db, @doc_x)
+   assert Dict.size(doc) == 1
+   assert doc["_id"] == @doc_x
+ end
 
-    refute doc["boolean"]
-    refute prev_rev == new_rev
-  end
+ test "returns a document with rev" do
+   doc = DB.find(@fixture_db, @doc_x)
+   rev = doc["_rev"]
 
-  test "returns a filtered document (except: ['number'])" do
-    doc = DB.find(@fixture_db, @doc_x, [except: ["number"]])
+   new_rev = DB.update(@fixture_db, doc)
 
-    assert doc.size == 2
-    assert doc["_id"] == @doc_x
-  end
-
-  test "returns a filtered document (only: ['_id'])" do
-    doc = DB.find(@fixture_db, @doc_x, [only: ["_id"]])
-
-    assert doc.size   == 1
-    assert doc["_id"] == @doc_x
-  end
-
-
-  test "returns a document with rev" do
-    doc = DB.find(@fixture_db, @doc_x)
-    rev = doc["_rev"]
-
-    new_rev = DB.update(@fixture_db, doc)
-
-    refute new_rev == rev
-    assert DB.find_with_rev(@fixture_db, @doc_x, rev)["_rev"] == rev
-  end
+   refute new_rev == rev
+   assert DB.find_with_rev(@fixture_db, @doc_x, rev)["_rev"] == rev
+   assert doc["_id"] == @doc_x
+ end
 
   # test "tries to enum through undefined db" do
   #   callback = fn(_a,_b,acc) -> { :ok, acc } end
