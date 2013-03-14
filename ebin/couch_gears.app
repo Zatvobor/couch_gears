@@ -6,7 +6,6 @@
                         'Elixir-CouchGears-Case-Acceptance',
                         'Elixir-CouchGears-Case',
                         'Elixir-CouchGears-Database-Db',
-                        'Elixir-CouchGears-Database-Helpers',
                         'Elixir-CouchGears-Database-Metadata',
                         'Elixir-CouchGears-Database',
                         'Elixir-CouchGears-Filters-OnlyRequestTypeJSON',
