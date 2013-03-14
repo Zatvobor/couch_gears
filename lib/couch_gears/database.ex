@@ -113,18 +113,18 @@ defmodule CouchGears.Database do
 
   ## Examples
 
-    Database.find_raw("db", "doc_id", [only: ["_id"]])
+    Database.find("db", "doc_id", [only: ["_id"]])
     # => [{"_id", "doc_id"}]
 
-    Database.find_raw("db", "doc_id", [except: ["_id"]])
+    Database.find("db", "doc_id", [except: ["_id"]])
     # => [{"_rev", "1-41f7a51b6f7002e9a41ad4fc466838e4"}]
 
   """
   def find(_doc_id, _opts, :no_db_file), do: :no_db_file
 
   def find(doc_id, opts, db) when is_record(db, CouchGears.Database) do
-    { _, raw_doc } = do_find(doc_id, db)
-    do_filter(raw_doc, opts)
+    { _, doc } = do_find(doc_id, db)
+    do_filter(doc, opts)
   end
 
   def find(db_name, doc_id, opts), do: find(doc_id, opts, open(db_name))
@@ -209,16 +209,16 @@ defmodule CouchGears.Database do
   end
 
   defp do_filter(missing, _opts) when is_atom(missing), do: missing
-  defp do_filter(raw_doc, []), do: raw_doc
+  defp do_filter(doc, []), do: doc
 
-  defp do_filter(raw_doc, opts) do
+  defp do_filter(doc, opts) do
     fun = case opts do
       [except: fields] ->
         fn({k,_}) -> !List.member?(fields, k) end
       [only: fields] ->
         fn({k,_}) -> List.member?(fields, k) end
     end
-    Enum.filter(raw_doc, fun)
+    Enum.filter(doc, fun)
   end
 
   defp make_rev(rev), do: :couch_doc.parse_rev(rev)
