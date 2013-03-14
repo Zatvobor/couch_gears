@@ -140,7 +140,7 @@ doc = db.find("doc_id")
 # => [{"_id", "doc_id"}, ...]
 ```
 
-Check a `lib/couch_gears/database.ex` or `test/acceptances/database_instance_acceptance.exs` for more examples.
+Check [lib/couch_gears/database.ex](https://github.com/datahogs/couch_gears/blob/master/lib/couch_gears/database.ex) or [test/acceptances/database_instance_acceptance.exs](https://github.com/datahogs/couch_gears/blob/master/test/acceptances/database_instance_acceptance.exs) for more examples.
 
 License
 -------
