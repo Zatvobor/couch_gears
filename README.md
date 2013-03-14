@@ -17,8 +17,10 @@ Installation Quickstart
 After downloading, type:
 
     make setup              # get-deps compile test
+    make test               # start a unit tests
     make get-couchdb-deps   # Optional: clone couch db 1.2.x git from apache repos if you want to use a Couch DB as dependency
-    make setup-dev-couchdb  # Optional: install Couch DB development version, and you'll have a `deps/couchdb/utils/./run -i`
+    make setup-dev-couchdb  # Optional: install a development CouchDB, so you can use a `deps/couchdb/utils/./run -i` command for starting the development DB
+    make acceptance         # Optional: start an acceptance tests, requires a development CouchDB
 
 After passed tests, put in `couch_normalizer` to `couchdb` bash:
 
