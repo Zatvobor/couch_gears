@@ -108,10 +108,16 @@ defmodule CouchGears.Initializer do
 
   defp setup_httpd_handlers do
     :couch_config.set(
-      "httpd_global_handlers", "#{@gears_request_prefix}", "{'#{@httpd_db_handlers}', handle_global_gears_req}", false
+      "httpd_global_handlers",
+      "#{@gears_request_prefix}",
+      binary_to_list("{'#{@httpd_db_handlers}', handle_global_gears_req}"),
+      false
     )
     :couch_config.set(
-      "httpd_db_handlers", "#{@gears_request_prefix}", "{'#{@httpd_db_handlers}', handle_db_gears_req}", false
+      "httpd_db_handlers",
+      "#{@gears_request_prefix}",
+      binary_to_list("{'#{@httpd_db_handlers}', handle_db_gears_req}"),
+      false
     )
   end
 
