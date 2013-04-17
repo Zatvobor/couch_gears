@@ -6,9 +6,10 @@ Couch Gears: A sexy convenience for customizing your Couch DB nodes as you need
 In short, `Couch Gears` is a spatial extension for [Apache CouchDB](https://github.com/apache/couchdb) based on [Dynamo](https://github.com/elixir-lang/dynamo) and tries to make the most out of this wonderful marriage of technologies.
 
 
-### Status: under active development and  scoping (YOU're welcome!)
+### Status: under active development and scoping (YOU're welcome!)
 ### Current version: `0.7.dev`
-### Future Roadmap: https://gist.github.com/AZatvornitskiy/5013360
+### Current roadmap: Issues/Milestones
+### Inspiration gist: https://gist.github.com/AZatvornitskiy/5013360
 
 
 Installation Quickstart
