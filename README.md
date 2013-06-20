@@ -7,7 +7,7 @@ In short, `Couch Gears` is a spatial extension for [Apache CouchDB](https://gith
 
 
 ### Status: under active development and scoping (YOU're welcome!)
-### Current version: `0.7.dev`
+### Current version: `0.7` (tested on Elixir 0.8.1 and CouchDB 1.2.2)
 ### Current roadmap: Issues/Milestones
 ### Inspiration gist: https://gist.github.com/AZatvornitskiy/5013360
 

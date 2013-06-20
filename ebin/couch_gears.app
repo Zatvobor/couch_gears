@@ -1,7 +1,7 @@
 {application,couch_gears,
              [{registered,[]},
               {description,"couch_gears"},
-              {vsn,"0.7.dev"},
+              {vsn,"0.7"},
               {modules,['Elixir-CouchGears-App',
                         'Elixir-CouchGears-Case-Acceptance',
                         'Elixir-CouchGears-Case',
