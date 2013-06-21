@@ -8,9 +8,7 @@ defmodule CouchGears.Mochiweb.BodyParser do
   end
 
   @doc false
-  def parse_body("application/json", body) do
-    JSON.decode body
-  end
+  def parse_body("application/json", body), do: :ejson.decode(body)
 
   @doc false
   def parse_body(_, body), do: body
