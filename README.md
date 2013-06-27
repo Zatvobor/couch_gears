@@ -26,7 +26,7 @@ After downloading, type:
     make setup-dev-couchdb  # Optional: install a development CouchDB, so you can use a `deps/couchdb/utils/./run -i` command for starting the development DB
     make acceptance         # Optional: start an acceptance tests, requires a development CouchDB
 
-After passed tests, put in `couch_normalizer` to `couchdb` bash:
+After passed tests, put in `couch_gears` to `couchdb` bash:
 
     COUCH_GEARS_PA_OPTIONS="-pa /path/to/couch_gears/current/ebin"
     ERL_START_OPTIONS="$ERL_OS_MON_OPTIONS -sasl errlog_type error +K true +A 4 $COUCH_GEARS_PA_OPTIONS"
