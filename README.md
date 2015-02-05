@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/datahogs/couch_gears.png)](https://travis-ci.org/datahogs/couch_gears)
+[![Build Status](https://travis-ci.org/Zatvobor/couch_gears.png?branch=master)](https://travis-ci.org/datahogs/couch_gears)
 
 Couch Gears: A sexy convenience for customizing your Couch DB nodes as you need
 -------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ In short, `Couch Gears` is a spatial extension for [Apache CouchDB](https://gith
 ### Current version: `0.8.dev`
 * latest stable: 0.7 (tested on Erlang R15B;R16B/Elixir 0.8.1/CouchDB 1.2.2;1.3.2)
 
-### Current roadmap: [Github Issues/Milestones](https://github.com/datahogs/couch_gears/issues)
+### Current roadmap: [Github Issues/Milestones](https://github.com/Zatvobor/couch_gears/issues)
 ### Inspiration gist: https://gist.github.com/AZatvornitskiy/5013360
 
 
@@ -144,10 +144,10 @@ doc = db.find("doc_id")
 # => [{"_id", "doc_id"}, ...]
 ```
 
-Check [lib/couch_gears/database.ex](https://github.com/datahogs/couch_gears/blob/master/lib/couch_gears/database.ex) or [test/acceptances/database_instance_acceptance.exs](https://github.com/datahogs/couch_gears/blob/master/test/acceptances/database_instance_acceptance.exs) for more examples.
+Check [lib/couch_gears/database.ex](https://github.com/Zatvobor/couch_gears/blob/master/lib/couch_gears/database.ex) or [test/acceptances/database_instance_acceptance.exs](https://github.com/Zatvobor/couch_gears/blob/master/test/acceptances/database_instance_acceptance.exs) for more examples.
 
 License
 -------
 
 `Couch Gears` source code is released under Apache 2 License.
-Check [LICENSE](https://github.com/datahogs/couch_gears/blob/master/LICENSE) and [NOTICE](https://github.com/datahogs/couch_gears/blob/master/NOTICE) files for more details.
+Check [LICENSE](https://github.com/Zatvobor/couch_gears/blob/master/LICENSE) and [NOTICE](https://github.com/Zatvobor/Zatvobor/blob/master/NOTICE) files for more details.
